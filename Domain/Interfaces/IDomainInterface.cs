@@ -1,9 +1,10 @@
 ﻿using Domain.Models;
+using Infra.Common.Result;
 
 namespace Domain.Interfaces
 {
     public interface IDomainInterface
     {
-        Task<double> CalculateAmmount(Order order);
+        Task<Result<double>> CalculateAmmount(Order order);
     }
 }
