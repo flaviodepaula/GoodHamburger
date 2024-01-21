@@ -2,15 +2,16 @@
 {
     public class Product
     {
-        private decimal _value;
-        public string? Name { get; set; }
-        public decimal Value => _value;
-        public CategoryOfProduct Caterogy { get; set; }
-
-        public void UpdatePrice(decimal price)
+        public Product(string? name, decimal value, ProductCategory caterogy)
         {
-            _value = price;
+            Name = name;
+            Value = value;
+            Caterogy = caterogy;
         }
 
+        public string? Name { get; set; }
+        public decimal Value { get; set; }
+        public ProductCategory Caterogy { get; set; }
+     
     }
 }

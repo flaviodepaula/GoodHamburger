@@ -9,7 +9,8 @@ namespace Infra.Repository.Interfaces
         Task<Result<OrderDTO>> GetOrderByIdAsync(Guid orderNumber);
 
         Task<Result<IEnumerable<ProductDTO>>> GetAllProductsByType(IEnumerable<CategoryOfProduct> categories);
-
+        Task<Result<IEnumerable<ProductDTO>>> GetProductDetailsList(IEnumerable<ProductDTO> products);
+        
         Task<Result<IEnumerable<OrderDTO>>> GetAllOrdersAsync();
 
         Task<Result<OrderDTO>> CreateOrderAync(OrderDTO order);

@@ -2,6 +2,7 @@
 using Domain.Interfaces;
 using Domain.Models.Order;
 using Microsoft.AspNetCore.Mvc;
+using WebApi.Models;
 
 namespace WebApi.Controllers
 {
@@ -40,10 +41,12 @@ namespace WebApi.Controllers
 
         [HttpPost]
         [Route("/createorder")]
-        public async Task<IActionResult> CreateOrderAsync([FromBody] CreateOrderCommand order)
+        public async Task<IActionResult> CreateOrderAsync([FromBody] RequestProductViewModel orderProducts)
         {
+            var orderCommand = _mapper.Map<CreateOrderCommand>(orderProducts);
+
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _domain.CreateOrderAsync(order);
+            var request = await _domain.CreateOrderAsync(orderCommand);
 
             if (request.IsSucess)
             {
@@ -76,7 +79,7 @@ namespace WebApi.Controllers
 
         [HttpPut]
         [Route("/updateorder")]
-        public async Task<IActionResult> UpdateOrder([FromBody] UpdateOrderCommand order)
+        public async Task<IActionResult> UpdateOrder([FromBody] Order order)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
             var request = await _domain.UpdateOrdersync(order);

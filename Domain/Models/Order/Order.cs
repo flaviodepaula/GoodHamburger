@@ -6,12 +6,27 @@ using Domain.Models.Products;
 namespace Domain.Models.Order
 {
     public sealed class Order
-    {
-        private decimal _amount;
-
+    {        
         public Guid Id { get; }
         public IEnumerable<Product> Products { get; private set; }
-        public decimal Amount => _amount;
+        public decimal Amount
+        {
+            get {
+
+                decimal totalAmount = Products.Sum(x => x.Value);
+
+                var discount3Items = new Discount3Items();
+                var discountSandwichDrink = new DiscountSandwichDrink();
+                var discountSandwichFries = new DiscountSandwichFries();
+
+                discount3Items.SetNext(discountSandwichDrink);
+                discountSandwichDrink.SetNext(discountSandwichFries);
+
+                decimal totalDiscount = discount3Items.GetDiscount(this);
+
+                return totalAmount - totalDiscount;
+            }
+        }
 
         private Order(IEnumerable<Product> products)
         {
@@ -33,23 +48,6 @@ namespace Domain.Models.Order
                 return Result.Failure<Order>(DomainErrors.DuplicatedItems);
 
             return new Order(products);
-        }
-
-        public void CalculateAmount()
-        {
-            decimal totalAmount = Products.Sum(x => x.Value);
-
-            var discount3Items = new Discount3Items();
-            var discountSandwichDrink = new DiscountSandwichDrink();
-            var discountSandwichFries = new DiscountSandwichFries();
-
-            discount3Items.SetNext(discountSandwichDrink);
-            discountSandwichDrink.SetNext(discountSandwichFries);
-
-            decimal totalDiscount = discount3Items.GetDiscount(this);
-
-            _amount = totalAmount - totalDiscount;
-
-        }
+        }       
     }
 }

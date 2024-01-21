@@ -2,6 +2,7 @@
 using Domain.Errors;
 using Domain.Interfaces;
 using Domain.Models.Order;
+using Domain.Models.Products;
 using Infra.Common.Result;
 using Infra.Repository.Entities;
 using Infra.Repository.Interfaces;
@@ -33,23 +34,43 @@ namespace Domain.Services
             return dbOrders.Value.ToList();
         }
 
-        public Task<Result<Order>> UpdateOrdersync(UpdateOrderCommand order)
+        public async Task<Result<Order>> UpdateOrdersync(Order order)
         {
-            throw new NotImplementedException();
+            var orderDTO = _mapper.Map<OrderDTO>(order);
+
+            var updateOrder = await _repository.UpdateOrderAsync(orderDTO);
+            if (updateOrder.IsFailure)
+                return Result.Failure<Order>(updateOrder.Error);
+
+            var updatedOrder = _mapper.Map<Order>(orderDTO);
+
+            return updatedOrder;
         }
+
         public async Task<Result<bool>> DeleteOrderAsync(Guid orderNumber)
         {
             var isDeleted = await _repository.DeleteOrderAsync(orderNumber);
 
             if (isDeleted.IsFailure)
-                return Result.Failure<bool>(DomainErrors.UnableToRemove);
+                return Result.Failure<bool>(isDeleted.Error);
 
             return isDeleted.Value;
         }
           
         public async Task<Result<Order>> CreateOrderAsync(CreateOrderCommand order)
         {
-            var newOrder = Order.CreateOrder(order.Products);
+            var productsDTO = _mapper.Map<IEnumerable<ProductDTO>>(order.Products);
+            var productsDB = await _repository.GetProductDetailsList(productsDTO);
+
+            if (productsDB.IsFailure)
+                return Result.Failure<Order>(productsDB.Error);
+
+            var products = _mapper.Map<IEnumerable<Product>>(productsDB);
+
+            var newOrder = Order.CreateOrder(products);
+            if (newOrder.IsFailure)
+                return Result.Failure<Order>(newOrder.Error);
+
             return newOrder.Value;
         }
 
