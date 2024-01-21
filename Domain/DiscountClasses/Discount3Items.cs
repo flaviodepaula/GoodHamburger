@@ -1,4 +1,5 @@
-﻿using Domain.Models;
+﻿using Domain.Models.Order;
+using Domain.Models.Products;
 
 namespace Domain.DiscountClasses
 {
@@ -8,9 +9,9 @@ namespace Domain.DiscountClasses
         {
             decimal discount = 0;
 
-            if (order.Products.Any(x => x.Caterogy == CaterogyOfProduct.Sandwich) &&
-               order.Products.Any(x => x.Caterogy == CaterogyOfProduct.Fries) &&
-               order.Products.Any(x => x.Caterogy == CaterogyOfProduct.Drink))
+            if (order.Products.Any(x => x.Caterogy == CategoryOfProduct.Sandwich) &&
+               order.Products.Any(x => x.Caterogy == CategoryOfProduct.Fries) &&
+               order.Products.Any(x => x.Caterogy == CategoryOfProduct.Drink))
             {
                 var amount = order.Products.Sum(x => x.Value);
 

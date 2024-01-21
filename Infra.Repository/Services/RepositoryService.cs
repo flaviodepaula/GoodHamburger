@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using Infra.Common.Result;
+using Infra.Repository.Entities;
 using Infra.Repository.Interfaces;
-using Infra.Repository.Models;
 using Microsoft.Extensions.Logging;
 
 namespace Infra.Repository.Services
@@ -17,7 +17,42 @@ namespace Infra.Repository.Services
             _mapper = mapper;
         }
 
-        public Task<Result<Product>> GetProdutcs()
+        public Task<Result<OrderDTO>> CreateOrderAync(OrderDTO order)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<bool>> DeleteOrderAsync(Guid orderNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<IEnumerable<OrderDTO>>> GetAllOrdersAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<IEnumerable<ProductDTO>>> GetAllProductsByType(IEnumerable<CategoryOfProduct> categories)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<OrderDTO>> GetOrderByIdAsync(Guid orderNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<ProductDTO>> GetProdutcs()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<IEnumerable<ProductDTO>>> GetProdutcsPriceAsync(Guid orderNumber)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Result<OrderDTO>> UpdateOrderAsync(OrderDTO order)
         {
             throw new NotImplementedException();
         }

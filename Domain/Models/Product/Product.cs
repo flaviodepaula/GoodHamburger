@@ -1,14 +1,11 @@
-﻿using System.Xml.Linq;
-
-namespace Domain.Models
+﻿namespace Domain.Models.Products
 {
     public class Product
     {
         private decimal _value;
-
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public decimal Value => _value;
-        public CaterogyOfProduct Caterogy { get; set; }
+        public CategoryOfProduct Caterogy { get; set; }
 
         public void UpdatePrice(decimal price)
         {
