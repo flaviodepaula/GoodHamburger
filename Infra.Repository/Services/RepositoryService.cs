@@ -6,7 +6,7 @@ using Microsoft.Extensions.Logging;
 
 namespace Infra.Repository.Services
 {
-    public class RepositoryService : IRepository
+    public class RepositoryService : IProductRepository
     {
         private readonly ILogger<RepositoryService> _logger;
         private readonly IMapper _mapper;
@@ -17,7 +17,7 @@ namespace Infra.Repository.Services
             _mapper = mapper;
         }
 
-        public Task<Result<OrderDTO>> CreateOrderAync(OrderDTO order)
+        public Task<Result<Order>> CreateOrderAync(Order order)
         {
             throw new NotImplementedException();
         }
@@ -27,32 +27,32 @@ namespace Infra.Repository.Services
             throw new NotImplementedException();
         }
 
-        public Task<Result<IEnumerable<OrderDTO>>> GetAllOrdersAsync()
+        public Task<Result<IEnumerable<Order>>> GetAllOrdersAsync()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Result<IEnumerable<ProductDTO>>> GetAllProductsByType(IEnumerable<CategoryOfProduct> categories)
+        public Task<Result<IEnumerable<Product>>> GetAllProductsByType(IEnumerable<CategoryOfProduct> categories)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Result<OrderDTO>> GetOrderByIdAsync(Guid orderNumber)
+        public Task<Result<Order>> GetOrderByIdAsync(Guid orderNumber)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Result<ProductDTO>> GetProdutcs()
+        public Task<Result<Product>> GetProdutcs()
         {
             throw new NotImplementedException();
         }
 
-        public Task<Result<IEnumerable<ProductDTO>>> GetProdutcsPriceAsync(Guid orderNumber)
+        public Task<Result<IEnumerable<Product>>> GetProdutcsPriceAsync(Guid orderNumber)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Result<OrderDTO>> UpdateOrderAsync(OrderDTO order)
+        public Task<Result<Order>> UpdateOrderAsync(Order order)
         {
             throw new NotImplementedException();
         }

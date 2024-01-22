@@ -2,7 +2,7 @@
 {
     public class Product
     {
-        public Product(string? name, decimal value, ProductCategory caterogy)
+        public Product(string? name, decimal value, enumProductCategory caterogy)
         {
             Name = name;
             Value = value;
@@ -11,7 +11,7 @@
 
         public string? Name { get; set; }
         public decimal Value { get; set; }
-        public ProductCategory Caterogy { get; set; }
+        public enumProductCategory Caterogy { get; set; }
      
     }
 }

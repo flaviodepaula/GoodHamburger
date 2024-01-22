@@ -22,7 +22,7 @@ namespace Domain.Mapping
                            opt => opt.MapFrom( src => new List<Product>
                                                       { new(src.Description,
                                                             src.Value.Value,
-                                                            (ProductCategory)Enum.Parse(typeof(ProductCategory), src.Category))
+                                                            (enumProductCategory)Enum.Parse(typeof(enumProductCategory), src.Category))
                                                       }));
         }
     }

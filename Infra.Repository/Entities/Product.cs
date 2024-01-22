@@ -2,7 +2,7 @@
 
 namespace Infra.Repository.Entities
 {
-    public record ProductDTO
+    public record Product
     {
         public Guid? Id { get; set; }
         public string? Description { get; set; }

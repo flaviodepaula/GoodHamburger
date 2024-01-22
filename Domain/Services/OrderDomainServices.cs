@@ -71,6 +71,17 @@ namespace Domain.Services
             if (newOrder.IsFailure)
                 return Result.Failure<Order>(newOrder.Error);
 
+            OrderDTO newOrderDTO = new OrderDTO
+            {
+                OrderId = newOrder.Value.Id,
+                Products = productsDTO,
+                TotalAmount = newOrder.Value.Amount
+            };
+
+            var newOrderDatabase = await _repository.CreateOrderAync(newOrderDTO);
+            if (newOrderDatabase.IsFailure)
+                return Result.Failure<Order>(newOrderDatabase.Error);
+
             return newOrder.Value;
         }
 

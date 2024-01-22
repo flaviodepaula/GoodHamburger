@@ -1,6 +1,6 @@
 ﻿namespace Domain.Models.Products
 {
-    public enum ProductCategory
+    public enum enumProductCategory
     {
         Sandwich,
         Fries,
