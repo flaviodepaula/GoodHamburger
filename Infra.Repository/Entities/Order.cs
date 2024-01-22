@@ -6,7 +6,7 @@ namespace Infra.Repository.Entities
     {
         [Key]
         public Guid OrderId { get; set; }
-        public IEnumerable<Product> Products { get; set; }        
+        public IEnumerable<Products> Products { get; set; }        
         public decimal TotalAmount { get; set; }
     }
 }

@@ -1,5 +1,6 @@
-﻿using AutoMapper;
-using Domain.Interfaces;
+﻿using Application.Interfaces;
+using Application.Models;
+using AutoMapper;
 using Domain.Models.Order;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
@@ -10,13 +11,15 @@ namespace WebApi.Controllers
     [ApiController]
     public class OrderController : Controller
     {
-        private readonly IOrderDomain _domain;
+        private readonly IOrderApplication _application;
         private readonly ILogger<OrderController> _logger;
         private readonly IMapper _mapper;
 
-        public OrderController(IOrderDomain domain, ILogger<OrderController> logger, IMapper mapper)
+        public OrderController(IOrderApplication domain, 
+                               ILogger<OrderController> logger, 
+                               IMapper mapper)
         {
-            _domain = domain;
+            _application = domain;
             _logger = logger;
             _mapper = mapper;
         }
@@ -26,7 +29,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetOrderAmount([FromBody] Guid orderGuid)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _domain.GetOrderAmountAsync(orderGuid);
+            var request = await _application.GetOrderAmountAsync(orderGuid);
 
             if (request.IsSucess)
             {
@@ -43,10 +46,10 @@ namespace WebApi.Controllers
         [Route("/order")]
         public async Task<IActionResult> CreateOrderAsync([FromBody] RequestProductViewModel orderProducts)
         {
-            var orderCommand = _mapper.Map<CreateOrderCommand>(orderProducts);
+            var orderCommand = _mapper.Map<OrderDTO>(orderProducts);
 
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _domain.CreateOrderAsync(orderCommand);
+            var request = await _application.CreateOrderAsync(orderCommand);
 
             if (request.IsSucess)
             {
@@ -64,7 +67,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetAllOrdersAsync([FromBody] Guid orderGuid)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _domain.GetAllOrdersAsync();
+            var request = await _application.GetAllOrdersAsync();
 
             if (request.IsSucess)
             {
@@ -82,7 +85,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> UpdateOrder([FromBody] Order order)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _domain.UpdateOrdersync(order);
+            var request = await _application.UpdateOrdersync(order);
 
             if (request.IsSucess)
             {
@@ -100,7 +103,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> DeleteOrderAsync([FromBody] Guid orderGuid)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _domain.DeleteOrderAsync(orderGuid);
+            var request = await _application.DeleteOrderAsync(orderGuid);
 
             if (request.IsSucess)
             {

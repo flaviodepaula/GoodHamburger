@@ -10,10 +10,10 @@ namespace Infra.Repository.Interfaces
 {
     public interface IOrderRepository
     {
-        Task<Result<Order>> GetOrderByIdAsync(Guid orderNumber);
-        Task<Result<IEnumerable<Order>>> GetAllOrdersAsync();
-        Task<Result<Order>> CreateOrderAync(Order order);
-        Task<Result<Order>> UpdateOrderAsync(Order order);
-        Task<Result<bool>> DeleteOrderAsync(Guid orderNumber);
+        Task<Result<Order>> GetByIdAsync(Guid orderNumber);
+        Task<Result<IEnumerable<Order>>> GetAllAsync();
+        Task<Result<Order>> CreateAync(Order order);
+        Task<Result<Order>> UpdateAsync(Order order);
+        Task<Result<bool>> DeleteAsync(Guid orderNumber);
     }
 }

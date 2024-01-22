@@ -1,4 +1,4 @@
-﻿using Domain.Interfaces;
+﻿using Application.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
@@ -7,12 +7,12 @@ namespace WebApi.Controllers
     [ApiController]
     public class ProductsController : ControllerBase
     {
-        private readonly IProductsDomain _domain;
+        private readonly IProductApplication _application;
         private readonly ILogger<ProductsController> _logger;
 
-        public ProductsController(IProductsDomain domain, ILogger<ProductsController> logger)
+        public ProductsController(IProductApplication application, ILogger<ProductsController> logger)
         {
-            _domain = domain;
+            _application = application;
             _logger = logger;          
         }
 
@@ -21,7 +21,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetSandwichesAndExtras()
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _domain.GetAllSandwichesAndExtrasAsync();
+            var request = await _application.GetAllSandwichesAndExtrasAsync();
 
             if (request.IsSucess)
             {
@@ -39,7 +39,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetExtras()
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _domain.GetAllExtrasAsync();
+            var request = await _application.GetAllExtrasAsync();
 
             if (request.IsSucess)
             {
@@ -56,7 +56,7 @@ namespace WebApi.Controllers
         public async Task<IActionResult> GetSandwiches()
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _domain.GetAllSandwichesAsync();
+            var request = await _application.GetAllSandwichesAsync();
 
             if (request.IsSucess)
             {
