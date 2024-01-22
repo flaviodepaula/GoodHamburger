@@ -40,7 +40,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPost]
-        [Route("/createorder")]
+        [Route("/order")]
         public async Task<IActionResult> CreateOrderAsync([FromBody] RequestProductViewModel orderProducts)
         {
             var orderCommand = _mapper.Map<CreateOrderCommand>(orderProducts);
@@ -78,7 +78,7 @@ namespace WebApi.Controllers
         }
 
         [HttpPut]
-        [Route("/updateorder")]
+        [Route("/order")]
         public async Task<IActionResult> UpdateOrder([FromBody] Order order)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
@@ -96,7 +96,7 @@ namespace WebApi.Controllers
         }
 
         [HttpDelete]
-        [Route("/removeorder")]
+        [Route("/order")]
         public async Task<IActionResult> DeleteOrderAsync([FromBody] Guid orderGuid)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
