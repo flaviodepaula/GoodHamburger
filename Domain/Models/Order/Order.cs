@@ -1,31 +1,21 @@
 ﻿using Domain.DiscountClasses;
 using Domain.Errors;
-using Infra.Common.Result;
+using Domain.Interfaces;
 using Domain.Models.Products;
+using Infra.Common.Result;
 
 namespace Domain.Models.Order
 {
     public sealed class Order
-    {        
+    {
+        private readonly IProductValidator _productValidator;
+        private decimal _amount;
+
         public Guid Id { get; }
         public IEnumerable<Product> Products { get; private set; }
         public decimal Amount
         {
-            get {
-
-                decimal totalAmount = Products.Sum(x => x.Value);
-
-                var discount3Items = new Discount3Items();
-                var discountSandwichDrink = new DiscountSandwichDrink();
-                var discountSandwichFries = new DiscountSandwichFries();
-
-                discount3Items.SetNext(discountSandwichDrink);
-                discountSandwichDrink.SetNext(discountSandwichFries);
-
-                decimal totalDiscount = discount3Items.GetDiscount(this);
-
-                return totalAmount - totalDiscount;
-            }
+            get { return _amount; }
         }
 
         private Order(IEnumerable<Product> products)
@@ -34,7 +24,12 @@ namespace Domain.Models.Order
             Products = products;
         }
 
-        public static Result<Order> CreateOrder(IEnumerable<Product> products)
+        public Order(IProductValidator productValidator)
+        {
+            _productValidator = productValidator;
+        }
+
+        public static async Task<Result<Order>> CreateOrder(IEnumerable<Product> products)
         {
             if (products == null || !products.Any())
                 return Result.Failure<Order>(DomainErrors.OrderWithoutProducts);
@@ -47,7 +42,30 @@ namespace Domain.Models.Order
             if (hasDuplicated)
                 return Result.Failure<Order>(DomainErrors.DuplicatedItems);
 
+            var newOrder = new Order(products);
+            var isValid = await newOrder._productValidator.IsValid(products);
+            if (isValid.IsFailure)            
+                return Result.Failure<Order>(DomainErrors.DuplicatedItems);
+            
+            newOrder.CalculateAmount();
+
             return new Order(products);
-        }       
+        }    
+    
+        private void CalculateAmount() 
+        {
+            decimal totalAmount = Products.Sum(x => x.Value);
+
+            var discount3Items = new Discount3Items();
+            var discountSandwichDrink = new DiscountSandwichDrink();
+            var discountSandwichFries = new DiscountSandwichFries();
+
+            discount3Items.SetNext(discountSandwichDrink);
+            discountSandwichDrink.SetNext(discountSandwichFries);
+
+            decimal totalDiscount = discount3Items.GetDiscount(this);
+
+            _amount = totalAmount - totalDiscount;
+        }
     }
 }

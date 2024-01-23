@@ -1,11 +1,12 @@
 ﻿using Application.Interfaces;
+using Domain.Interfaces;
 using Domain.Models.Products;
 using Infra.Common.Result;
 using Infra.Repository.Interfaces;
 
 namespace Application.Services
 {
-    public class ProductApplication : IProductApplication
+    public class ProductApplication : IProductApplication, IProductValidator
     {
         public readonly IProductRepository _repository;
         public ProductApplication(IProductRepository repository)
@@ -59,6 +60,17 @@ namespace Application.Services
                 return Result.Failure<IEnumerable<Product>>(result.Error);
 
             return result.Value.ToList();
+        }
+
+        public async Task<Result<bool>> IsValid(IEnumerable<Product> products)
+        {
+            var result = await _repository.GetProductDetailsList(products);
+
+            if (result.IsFailure) 
+                return Result.Failure<bool>(result.Error);
+
+            //todo: make a true validation. 
+            return result.Value.Count() == products.Count();
         }
     }
 }

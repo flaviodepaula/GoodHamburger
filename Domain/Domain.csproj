@@ -10,9 +10,4 @@
     <ProjectReference Include="..\Infra.Common\Infra.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Interfaces\" />
-    <Folder Include="Mapping\" />
-  </ItemGroup>
-
 </Project>

@@ -65,7 +65,7 @@ namespace Application.Services
             if (products.IsFailure)
                 return Result.Failure<Order>(products.Error);
 
-            var newOrder = Order.CreateOrder(products.Value);
+            var newOrder = await Order.CreateOrder(products.Value);
             if (newOrder.IsFailure)
                 return Result.Failure<Order>(newOrder.Error);
 
