@@ -52,7 +52,7 @@ namespace Domain.Models.Order
             return new Order(products);
         }    
     
-        private void CalculateAmount() 
+        public void CalculateAmount() 
         {
             decimal totalAmount = Products.Sum(x => x.Value);
 

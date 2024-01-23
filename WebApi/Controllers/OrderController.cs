@@ -46,10 +46,10 @@ namespace WebApi.Controllers
         [Route("/order")]
         public async Task<IActionResult> CreateOrderAsync([FromBody] RequestProductViewModel orderProducts)
         {
-            var orderCommand = _mapper.Map<OrderDTO>(orderProducts);
+            var orderDTO = _mapper.Map<OrderDTO>(orderProducts);
 
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.CreateOrderAsync(orderCommand);
+            var request = await _application.CreateOrderAsync(orderDTO);
 
             if (request.IsSucess)
             {

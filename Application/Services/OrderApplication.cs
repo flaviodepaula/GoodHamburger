@@ -2,29 +2,25 @@
 using Application.Models;
 using AutoMapper;
 using Domain.Errors;
+using Domain.Interfaces;
 using Domain.Models.Order;
 using Domain.Models.Products;
 using Infra.Common.Result;
 using Infra.Repository.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Services
 {
     public class OrderApplication : IOrderApplication
     {
         private readonly IOrderRepository _orderRepository;
-        private readonly IProductRepository _productRepository;
+        private readonly IProductValidator _productValidator;
         private readonly IMapper _mapper;
 
 
-        public OrderApplication(IOrderRepository repository, IProductRepository productRepository, IMapper mapper)
+        public OrderApplication(IOrderRepository repository, IProductValidator productValidator, IMapper mapper)
         {
             _orderRepository = repository;
-            _productRepository = productRepository;
+            _productValidator = productValidator;
             _mapper = mapper;
         }
 
@@ -39,7 +35,14 @@ namespace Application.Services
         }
 
         public async Task<Result<Order>> UpdateOrdersync(Order order)
-        { 
+        {
+            var products = await _productValidator.IsValid(order.Products);
+
+            if (products.IsFailure)
+                return Result.Failure<Order>(products.Error);
+
+            order.CalculateAmount();
+
             var updatedOrder = await _orderRepository.UpdateAsync(order);
             if (updatedOrder.IsFailure)
                 return Result.Failure<Order>(updatedOrder.Error);
@@ -60,12 +63,12 @@ namespace Application.Services
         public async Task<Result<Order>> CreateOrderAsync(OrderDTO order)
         {
             var productsDTO = _mapper.Map<IEnumerable<Product>>(order.Products);
-            var products = await _productRepository.GetProductDetailsList(productsDTO);
+            var products = await _productValidator.IsValid(productsDTO);
 
             if (products.IsFailure)
                 return Result.Failure<Order>(products.Error);
 
-            var newOrder = await Order.CreateOrder(products.Value);
+            var newOrder = await Order.CreateOrder(productsDTO);
             if (newOrder.IsFailure)
                 return Result.Failure<Order>(newOrder.Error);
 
