@@ -1,18 +1,17 @@
 ﻿using AutoMapper;
 using Domain.Models.Products;
 using Infra.Common.Result;
-using Infra.Repository.Entities;
 using Infra.Repository.Interfaces;
 using Microsoft.Extensions.Logging;
 
 namespace Infra.Repository.Services
 {
-    public class RepositoryService : IProductRepository
+    public class ProductRepository : IProductRepository
     {
-        private readonly ILogger<RepositoryService> _logger;
+        private readonly ILogger<ProductRepository> _logger;
         private readonly IMapper _mapper;
 
-        public RepositoryService(ILogger<RepositoryService> logger, IMapper mapper)
+        public ProductRepository(ILogger<ProductRepository> logger, IMapper mapper)
         {
             _logger = logger;
             _mapper = mapper;
