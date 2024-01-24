@@ -1,28 +1,58 @@
-using Application.Support;
+using Serilog;
+using System.Diagnostics.CodeAnalysis;
 
-var builder = WebApplication.CreateBuilder(args);
-
-// Add services to the container.
-builder.Services.AddApplicationServiceConfigurations();
-builder.Services.AddControllers();
-
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-
-var app = builder.Build();
-
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+namespace WebApi
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    [ExcludeFromCodeCoverage]
+    public class Program
+    {
+        private static IConfiguration Configuration
+        {
+            get
+            {
+                return new ConfigurationBuilder()
+                   .AddJsonFile("appsettings.json", optional: false, reloadOnChange: true)
+                    .AddEnvironmentVariables()
+                    .Build();
+            }
+        }
 
-app.UseHttpsRedirection();
+        public static void Main(string[] args)
+        {
+            Log.Logger = new LoggerConfiguration()
+                .ReadFrom.Configuration(Configuration)
+                .Enrich.FromLogContext()
+                .CreateLogger();
 
-app.UseAuthorization();
+            try
+            {
+                Log.Information("Iniciado Web Host");
+                CreateHostBuilder(args).Build().Run();
+            }
+            catch (Exception ex)
+            {
+                Log.Fatal(ex, "Host terminado inesperadamente");
+                throw;
+            }
+            finally
+            {
+                Log.CloseAndFlush();
+            }
+        }
 
-app.MapControllers();
+        private static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            var builder = Host.CreateDefaultBuilder(args)
+                .ConfigureWebHostDefaults(async webhostBuilder =>
+                {
+                    webhostBuilder.ConfigureAppConfiguration((hostingContext, config) =>
+                         _ = config.AddConfiguration(Configuration)
+                        .SetBasePath(hostingContext.HostingEnvironment.ContentRootPath))
+                        .UseStartup<Startup>();
 
-app.Run();
+                }).UseSerilog();
+
+            return builder;
+        }
+    }
+} 

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infra.Repository.Mapping
 {
-    internal class OrderMapping : IEntityTypeConfiguration<Entities.Orders>
+    public class OrderMapping : IEntityTypeConfiguration<Entities.Orders>
     {
         public void Configure(EntityTypeBuilder<Orders> builder)
         {
