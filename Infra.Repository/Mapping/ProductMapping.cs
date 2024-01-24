@@ -9,9 +9,9 @@ namespace Infra.Repository.Mapping
         public void Configure(EntityTypeBuilder<Products> builder)
         {
             builder.HasKey(prd => prd.ProductId);
-            builder.Property(prd => prd.Value).HasColumnType("decimal");
-            builder.Property(prd => prd.Description).HasMaxLength(255).HasColumnType("string");
-            builder.Property(prd => prd.Category).HasMaxLength(30).HasColumnType("string");
+            builder.Property(prd => prd.Value).HasColumnType("decimal").HasPrecision(10, 2);
+            builder.Property(prd => prd.Description).HasMaxLength(255).HasColumnType("varchar");
+            builder.Property(prd => prd.Category).HasMaxLength(30).HasColumnType("varchar");
         }
     }
 }

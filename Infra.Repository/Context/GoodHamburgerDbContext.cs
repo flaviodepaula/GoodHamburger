@@ -1,20 +1,35 @@
-﻿using Infra.Repository.Mapping;
+﻿using Infra.Repository.Entities;
+using Infra.Repository.Mapping;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infra.Repository.Context
 {
     public class GoodHamburgerDbContext : DbContext
     {
-        public DbSet<Entities.Orders> Orders => Set<Entities.Orders>();
-        public DbSet<Entities.Products> Products => Set<Entities.Products>();
+        public DbSet<Orders> Orders => Set<Orders>();
+        public DbSet<Products> Products => Set<Products>();
+        public DbSet<OrdersProducts> OrdersProducts {  get; set; }
+
+        public GoodHamburgerDbContext(DbContextOptions<GoodHamburgerDbContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(GoodHamburgerDbContext).Assembly);
-            modelBuilder.ApplyConfiguration(new OrderMapping());
 
-            modelBuilder.Entity<Entities.Orders>().
-                HasMany(a => a.Products);
+            modelBuilder.Entity<OrdersProducts>().HasKey(x => new { x.OrderId, x.ProductId });
+
+            modelBuilder.ApplyConfiguration(new OrderMapping());
+            modelBuilder.ApplyConfiguration(new ProductMapping());
+
+            modelBuilder.Entity<OrdersProducts>()
+                .HasOne(x => x.Order)
+                .WithMany(y => y.ProductsOnOrder)
+                .HasForeignKey(x => x.OrderId);
+
+            modelBuilder.Entity<OrdersProducts>()
+                .HasOne(x => x.Product)
+                .WithMany(y=> y.OrdersProducts)
+                .HasForeignKey(x => x.ProductId);
         }
     }
 }

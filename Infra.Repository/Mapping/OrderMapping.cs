@@ -9,7 +9,7 @@ namespace Infra.Repository.Mapping
         public void Configure(EntityTypeBuilder<Orders> builder)
         {
             builder.HasKey(order => order.OrderId);
-            builder.Property(order => order.TotalAmount).HasColumnType("decimal");       
+            builder.Property(order => order.TotalAmount).HasColumnType("decimal").HasPrecision(10,2);                   
         }
     }
 }
