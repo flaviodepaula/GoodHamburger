@@ -16,7 +16,7 @@ namespace Application.Services
 
         public async Task<Result<bool>> IsValidAsync(IEnumerable<Product> products, CancellationToken cancellationToken)
         {
-            var result = await _repository.GetProductDetailsList(products);
+            var result = await _repository.GetProductDetailsListAsync(products, cancellationToken);
 
             if (result.IsFailure)
                 return Result.Failure<bool>(result.Error);

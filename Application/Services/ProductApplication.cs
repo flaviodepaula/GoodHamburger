@@ -13,14 +13,14 @@ namespace Application.Services
             _repository = repository;
         }
 
-        public async Task<Result<IEnumerable<Product>>> GetAllExtrasAsync()
+        public async Task<Result<IEnumerable<Product>>> GetAllExtrasAsync(CancellationToken cancellationToken)
         {
             var types = new List<enumProductCategoryType>
             {
                 enumProductCategoryType.Extras
             };
             
-            var result = await _repository.GetAllProductsByType(types);
+            var result = await _repository.GetAllProductsByTypeAsync(types, cancellationToken);
 
             if (result.IsFailure)
                 return Result.Failure<IEnumerable<Product>>(result.Error);
@@ -28,7 +28,7 @@ namespace Application.Services
             return result.Value.ToList();
         }
 
-        public async Task<Result<IEnumerable<Product>>> GetAllSandwichesAndExtrasAsync()
+        public async Task<Result<IEnumerable<Product>>> GetAllSandwichesAndExtrasAsync(CancellationToken cancellationToken)
         {
             var types = new List<enumProductCategoryType>
             {
@@ -36,7 +36,7 @@ namespace Application.Services
                 enumProductCategoryType.Extras
             };
 
-            var result = await _repository.GetAllProductsByType(types);
+            var result = await _repository.GetAllProductsByTypeAsync(types, cancellationToken);
 
             if (result.IsFailure)
                 return Result.Failure<IEnumerable<Product>>(result.Error);
@@ -44,14 +44,14 @@ namespace Application.Services
             return result.Value.ToList();
         }
 
-        public async Task<Result<IEnumerable<Product>>> GetAllSandwichesAsync()
+        public async Task<Result<IEnumerable<Product>>> GetAllSandwichesAsync(CancellationToken cancellationToken)
         {
             var types = new List<enumProductCategoryType>
             {
                 enumProductCategoryType.Sandwich
             };
 
-            var result = await _repository.GetAllProductsByType(types);
+            var result = await _repository.GetAllProductsByTypeAsync(types, cancellationToken);
 
             if (result.IsFailure)
                 return Result.Failure<IEnumerable<Product>>(result.Error);

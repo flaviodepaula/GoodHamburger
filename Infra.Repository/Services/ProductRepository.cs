@@ -5,32 +5,28 @@ using Infra.Repository.Context;
 using Infra.Repository.Errors;
 using Infra.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Logging;
 
 namespace Infra.Repository.Services
 {
     public class ProductRepository : IProductRepository
     {
         private readonly GoodHamburgerDbContext _dbContext;
-
-        private readonly ILogger<ProductRepository> _logger;
         private readonly IMapper _mapper;
 
-        public ProductRepository(ILogger<ProductRepository> logger, IMapper mapper, GoodHamburgerDbContext dbContext)
+        public ProductRepository(IMapper mapper, GoodHamburgerDbContext dbContext)
         {
-            _logger = logger;
             _mapper = mapper;
             _dbContext = dbContext;
         }
 
-        public async Task<Result<IEnumerable<Product>>> GetAllProductsByType(IEnumerable<enumProductCategoryType> categories)
+        public async Task<Result<IEnumerable<Product>>> GetAllProductsByTypeAsync(IEnumerable<enumProductCategoryType> categories, CancellationToken cancellationToken)
         {
             try
             {
-                var stringCategories = categories.Select(x=> x.ToString()).ToList();
+                var stringCategories = categories.Select(x => x.ToString()).ToList();
 
                 IEnumerable<Product> databaseResult = Enumerable.Empty<Product>();
-                var result = await _dbContext.Products.Where(x => stringCategories.Contains(x.CategoryType)).ToListAsync();
+                var result = await _dbContext.Products.Where(x => stringCategories.Contains(x.CategoryType)).ToListAsync(cancellationToken);
 
                 if (result.Count != 0)
                 {
@@ -42,15 +38,14 @@ namespace Infra.Repository.Services
             {
                 return Result.Failure<IEnumerable<Product>>(RepositoryErrors.RequestToDatabaseFailed(ex.Message));
             }
-
         }
 
-        public async Task<Result<IEnumerable<Product>>> GetProductDetailsList(IEnumerable<Product> products)
+        public async Task<Result<IEnumerable<Product>>> GetProductDetailsListAsync(IEnumerable<Product> products, CancellationToken cancellationToken)
         {
             try
             {
                 IEnumerable<Product> databaseResult = Enumerable.Empty<Product>();
-                var result = await _dbContext.Products.Where(x => products.All(z => z.Id == x.ProductId)).ToListAsync();
+                var result = await _dbContext.Products.Where(x => products.All(z => z.Id == x.ProductId)).ToListAsync(cancellationToken);
                 if (result.Count != 0)
                 {
                     databaseResult = _mapper.Map<IEnumerable<Product>>(result);
@@ -60,10 +55,10 @@ namespace Infra.Repository.Services
             catch (Exception ex)
             {
                 return Result.Failure<IEnumerable<Product>>(RepositoryErrors.RequestToDatabaseFailed(ex.Message));
-            }            
+            }
         }
 
-        public Task<Result<IEnumerable<Product>>> GetProdutcsPriceAsync(Guid orderNumber)
+        public Task<Result<IEnumerable<Product>>> GetProdutcsPriceAsync(Guid orderNumber, CancellationToken cancellationToken)
         {
             throw new NotImplementedException();
         }

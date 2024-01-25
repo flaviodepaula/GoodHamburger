@@ -18,10 +18,10 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("/sandwichesandextras")]
-        public async Task<IActionResult> GetSandwichesAndExtras()
+        public async Task<IActionResult> GetSandwichesAndExtrasAsync(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.GetAllSandwichesAndExtrasAsync();
+            var request = await _application.GetAllSandwichesAndExtrasAsync(cancellationToken);
 
             if (request.IsSucess)
             {
@@ -36,10 +36,10 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("/extras")]
-        public async Task<IActionResult> GetExtras()
+        public async Task<IActionResult> GetExtrasAsync(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.GetAllExtrasAsync();
+            var request = await _application.GetAllExtrasAsync(cancellationToken);
 
             if (request.IsSucess)
             {
@@ -53,10 +53,10 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("/sandwiches")]
-        public async Task<IActionResult> GetSandwiches()
+        public async Task<IActionResult> GetSandwiches(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.GetAllSandwichesAsync();
+            var request = await _application.GetAllSandwichesAsync(cancellationToken);
 
             if (request.IsSucess)
             {
