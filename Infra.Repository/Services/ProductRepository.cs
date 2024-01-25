@@ -59,11 +59,6 @@ namespace Infra.Repository.Services
             {
                 return Result.Failure<IEnumerable<Product>>(RepositoryErrors.RequestToDatabaseFailed(ex.Message));
             }
-        }
-
-        public Task<Result<IEnumerable<Product>>> GetProdutcsPriceAsync(Guid orderNumber, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
+        }      
     }
 }
