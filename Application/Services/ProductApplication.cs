@@ -19,7 +19,7 @@ namespace Application.Services
             var types = new List<enumProductCategory>
             {
                 enumProductCategory.Fries,
-                enumProductCategory.Drink
+                enumProductCategory.SoftDrink
             };
             
             var result = await _repository.GetAllProductsByType(types);
@@ -36,7 +36,7 @@ namespace Application.Services
             {
                 enumProductCategory.Sandwich,
                 enumProductCategory.Fries,
-                enumProductCategory.Drink
+                enumProductCategory.SoftDrink
             };
 
             var result = await _repository.GetAllProductsByType(types);

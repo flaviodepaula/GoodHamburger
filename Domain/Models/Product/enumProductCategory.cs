@@ -4,6 +4,6 @@
     {
         Sandwich,
         Fries,
-        Drink
+        SoftDrink
     }
 }

@@ -35,7 +35,7 @@ namespace Domain.Models.Order
                 return Result.Failure<Order>(DomainErrors.OrderWithoutProducts);
 
             var groupByCategory = from product in products
-                                  group product by product.Caterogy into categoryGroup
+                                  group product by product.Category into categoryGroup
                                   select categoryGroup;
 
             var hasDuplicated = groupByCategory.All(x => x.Count() > 1);

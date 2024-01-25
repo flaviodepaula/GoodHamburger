@@ -12,13 +12,11 @@ namespace WebApi
     {
         public Startup(IConfiguration configuration)
         {
-            Configuration = configuration;
-            SolutionName = "GoodHamburger.V1";
+            Configuration = configuration;        
         }
 
         public IConfiguration Configuration { get; }
-        private string SolutionName { get; set; }
-
+        
         public void ConfigureServices(IServiceCollection services)
         {
             services.Configure<KestrelServerOptions>(options =>
@@ -32,22 +30,22 @@ namespace WebApi
             services.AddAutoMapper(typeof(WebApiMappings));
 
             services.AddApplicationServiceConfigurations()
-                    .AddRepositoryServiceConfiguration();
+                    .AddRepositoryServiceConfiguration(Configuration);
+
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             services.AddEndpointsApiExplorer();
             services.AddSwaggerGen();
         }
 
-
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-            if (env.IsEnvironment("Local"))
+            if (env.IsEnvironment("Development"))
             {
                 app.UseDeveloperExceptionPage();
                 IdentityModelEventSource.ShowPII = true;
             }
-             
+          
             app.UseSwagger();
             app.UseSwaggerUI();
             

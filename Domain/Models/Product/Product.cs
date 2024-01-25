@@ -2,16 +2,21 @@
 {
     public class Product
     {
-        public Product(string? name, decimal value, enumProductCategory caterogy)
+        public Product(Guid id, string? name, decimal value, enumProductCategory category)
         {
-            Name = name;
+            Id = id;
+            Description = name;
             Value = value;
-            Caterogy = caterogy;
+            Category = category;
         }
 
-        public string? Name { get; set; }
+        public Product()
+        {                
+        }
+        public Guid Id { get; set; }
+        public string? Description { get; set; }
         public decimal Value { get; set; }
-        public enumProductCategory Caterogy { get; set; }
+        public enumProductCategory Category { get; set; }
      
     }
 }
