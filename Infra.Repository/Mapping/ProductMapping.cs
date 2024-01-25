@@ -12,6 +12,7 @@ namespace Infra.Repository.Mapping
             builder.Property(prd => prd.Value).HasColumnType("decimal").HasPrecision(10, 2);
             builder.Property(prd => prd.Description).HasMaxLength(255).HasColumnType("varchar");
             builder.Property(prd => prd.Category).HasMaxLength(30).HasColumnType("varchar");
+            builder.Property(prd => prd.CategoryType).HasMaxLength(30).HasColumnType("varchar");
         }
     }
 }

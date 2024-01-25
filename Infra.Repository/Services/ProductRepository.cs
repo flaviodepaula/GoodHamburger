@@ -2,7 +2,6 @@
 using Domain.Models.Products;
 using Infra.Common.Result;
 using Infra.Repository.Context;
-using Infra.Repository.Entities;
 using Infra.Repository.Errors;
 using Infra.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -24,14 +23,14 @@ namespace Infra.Repository.Services
             _dbContext = dbContext;
         }
 
-        public async Task<Result<IEnumerable<Product>>> GetAllProductsByType(IEnumerable<enumProductCategory> categories)
+        public async Task<Result<IEnumerable<Product>>> GetAllProductsByType(IEnumerable<enumProductCategoryType> categories)
         {
             try
             {
                 var stringCategories = categories.Select(x=> x.ToString()).ToList();
 
                 IEnumerable<Product> databaseResult = Enumerable.Empty<Product>();
-                var result = await _dbContext.Products.Where(x => stringCategories.Contains(x.Category)).ToListAsync();
+                var result = await _dbContext.Products.Where(x => stringCategories.Contains(x.CategoryType)).ToListAsync();
 
                 if (result.Count != 0)
                 {

@@ -9,6 +9,7 @@ namespace Infra.Repository.Entities
         public string Description { get; set; }
         public decimal Value { get; set; }
         public string Category { get; set; }
+        public string CategoryType { get; set; }
         public IEnumerable<OrdersProducts> OrdersProducts { get; set; }
 
         public Products()

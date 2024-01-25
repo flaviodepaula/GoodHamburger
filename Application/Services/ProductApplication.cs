@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces;
-using Domain.Interfaces;
 using Domain.Models.Products;
 using Infra.Common.Result;
 using Infra.Repository.Interfaces;
@@ -16,10 +15,9 @@ namespace Application.Services
 
         public async Task<Result<IEnumerable<Product>>> GetAllExtrasAsync()
         {
-            var types = new List<enumProductCategory>
+            var types = new List<enumProductCategoryType>
             {
-                enumProductCategory.Fries,
-                enumProductCategory.SoftDrink
+                enumProductCategoryType.Extras
             };
             
             var result = await _repository.GetAllProductsByType(types);
@@ -32,11 +30,10 @@ namespace Application.Services
 
         public async Task<Result<IEnumerable<Product>>> GetAllSandwichesAndExtrasAsync()
         {
-            var types = new List<enumProductCategory>
+            var types = new List<enumProductCategoryType>
             {
-                enumProductCategory.Sandwich,
-                enumProductCategory.Fries,
-                enumProductCategory.SoftDrink
+                enumProductCategoryType.Sandwich,
+                enumProductCategoryType.Extras
             };
 
             var result = await _repository.GetAllProductsByType(types);
@@ -49,9 +46,9 @@ namespace Application.Services
 
         public async Task<Result<IEnumerable<Product>>> GetAllSandwichesAsync()
         {
-            var types = new List<enumProductCategory>
+            var types = new List<enumProductCategoryType>
             {
-                enumProductCategory.Sandwich
+                enumProductCategoryType.Sandwich
             };
 
             var result = await _repository.GetAllProductsByType(types);
