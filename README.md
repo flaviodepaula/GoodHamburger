@@ -1,45 +1,43 @@
-## Projeto GoodHambuger
+## Project: GoodHambuger
  
-## Descrição
+## Description
  
->Projeto desenvolvido para testes solicitado em entrevista
+>Project developed for tests purpose on a tech company
  
-## Execução local
- 
->Para a execução local, siga as intruções abaixo:
+## Follow the instructions below to run the project
  
 ```console
  
-# Clone o repositório
+# Clone the repository
  
 $ git clone <repo>
  
-# Acesse o projeto terminal/cmd
+# open the project path on terminal/cmd
  
-$ cd <pasta-exemplo>
+$ cd <folder>
  
-# Execute o banco de dados (SqlServer)
+# Execute the following docker command to run a SQL Server database
  
 $ docker run -d --name goodhamburger-sqldb-local -p 1433:1433 -e "MSSQL_SA_PASSWORD=senha@123" -e "ACCEPT_EULA=Y" mcr.microsoft.com/mssql/server:2022-latest
   
-# Execute as migrations - My database is hosted on Docker/WSL(Ubuntu)
+# Execute the migrations - My database is hosted on Docker/WSL(Ubuntu)
 
 $ dotnet ef database update -s .\WebApi\WebApi.csproj  -p .\Infra.Repository\ -v
  
-# Execute a api em dotnet
+# Run the API 
  
 $  dotnet run --project .\WebApi\WebApi.csproj
  
-# A aplicação será executada na porta 5000
+# The application will be run on port 5000
  
-acesse  <http://localhost:5000>
+ <http://localhost:5000>
  
-# Acesse a documentação swagger
+# Swagger documentation
  
-acesse  <http://localhost:5000/swagger/index.html>
+<http://localhost:5000/swagger/index.html>
  
   
-# SQL para buscar itens no banco de dados
+# SQL script to get itens from database
  SELECT ord.[OrderId], [TotalAmount], prd.Description, prd.Value
   FROM [dbo].[Orders] ord
   inner join [dbo].[OrdersProducts] ordprd on ordprd.OrderId = ord.OrderId
