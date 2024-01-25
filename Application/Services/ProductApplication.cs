@@ -1,12 +1,11 @@
 ﻿using Application.Interfaces;
-using Domain.Interfaces;
 using Domain.Models.Products;
 using Infra.Common.Result;
 using Infra.Repository.Interfaces;
 
 namespace Application.Services
 {
-    public class ProductApplication : IProductApplication, IProductValidator
+    public class ProductApplication : IProductApplication
     {
         public readonly IProductRepository _repository;
         public ProductApplication(IProductRepository repository)
@@ -14,15 +13,14 @@ namespace Application.Services
             _repository = repository;
         }
 
-        public async Task<Result<IEnumerable<Product>>> GetAllExtrasAsync()
+        public async Task<Result<IEnumerable<Product>>> GetAllExtrasAsync(CancellationToken cancellationToken)
         {
-            var types = new List<enumProductCategory>
+            var types = new List<enumProductCategoryType>
             {
-                enumProductCategory.Fries,
-                enumProductCategory.Drink
+                enumProductCategoryType.Extras
             };
             
-            var result = await _repository.GetAllProductsByType(types);
+            var result = await _repository.GetAllProductsByTypeAsync(types, cancellationToken);
 
             if (result.IsFailure)
                 return Result.Failure<IEnumerable<Product>>(result.Error);
@@ -30,16 +28,15 @@ namespace Application.Services
             return result.Value.ToList();
         }
 
-        public async Task<Result<IEnumerable<Product>>> GetAllSandwichesAndExtrasAsync()
+        public async Task<Result<IEnumerable<Product>>> GetAllSandwichesAndExtrasAsync(CancellationToken cancellationToken)
         {
-            var types = new List<enumProductCategory>
+            var types = new List<enumProductCategoryType>
             {
-                enumProductCategory.Sandwich,
-                enumProductCategory.Fries,
-                enumProductCategory.Drink
+                enumProductCategoryType.Sandwich,
+                enumProductCategoryType.Extras
             };
 
-            var result = await _repository.GetAllProductsByType(types);
+            var result = await _repository.GetAllProductsByTypeAsync(types, cancellationToken);
 
             if (result.IsFailure)
                 return Result.Failure<IEnumerable<Product>>(result.Error);
@@ -47,14 +44,14 @@ namespace Application.Services
             return result.Value.ToList();
         }
 
-        public async Task<Result<IEnumerable<Product>>> GetAllSandwichesAsync()
+        public async Task<Result<IEnumerable<Product>>> GetAllSandwichesAsync(CancellationToken cancellationToken)
         {
-            var types = new List<enumProductCategory>
+            var types = new List<enumProductCategoryType>
             {
-                enumProductCategory.Sandwich
+                enumProductCategoryType.Sandwich
             };
 
-            var result = await _repository.GetAllProductsByType(types);
+            var result = await _repository.GetAllProductsByTypeAsync(types, cancellationToken);
 
             if (result.IsFailure)
                 return Result.Failure<IEnumerable<Product>>(result.Error);
@@ -62,15 +59,5 @@ namespace Application.Services
             return result.Value.ToList();
         }
 
-        public async Task<Result<bool>> IsValid(IEnumerable<Product> products)
-        {
-            var result = await _repository.GetProductDetailsList(products);
-
-            if (result.IsFailure) 
-                return Result.Failure<bool>(result.Error);
-
-            //todo: make a true validation. 
-            return result.Value.Count() == products.Count();
-        }
     }
 }

@@ -4,9 +4,8 @@ using Infra.Common.Result;
 namespace Infra.Repository.Interfaces
 {
     public interface IProductRepository
-    {
-        Task<Result<IEnumerable<Product>>> GetProdutcsPriceAsync(Guid orderNumber);        
-        Task<Result<IEnumerable<Product>>> GetAllProductsByType(IEnumerable<enumProductCategory> categories);
-        Task<Result<IEnumerable<Product>>> GetProductDetailsList(IEnumerable<Product> products);
+    {            
+        Task<Result<IEnumerable<Product>>> GetAllProductsByTypeAsync(IEnumerable<enumProductCategoryType> categories, CancellationToken cancellationToken);
+        Task<Result<IEnumerable<Product>>> GetProductDetailsListAsync(IEnumerable<Product> products, CancellationToken cancellationToken);
     }
 }

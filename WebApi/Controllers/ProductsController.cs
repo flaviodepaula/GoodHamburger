@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("products")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -16,12 +16,11 @@ namespace WebApi.Controllers
             _logger = logger;          
         }
 
-        [HttpGet]
-        [Route("/sandwichesandextras")]
-        public async Task<IActionResult> GetSandwichesAndExtras()
+        [HttpGet("sandwichesandextras")]       
+        public async Task<IActionResult> GetSandwichesAndExtrasAsync(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.GetAllSandwichesAndExtrasAsync();
+            var request = await _application.GetAllSandwichesAndExtrasAsync(cancellationToken);
 
             if (request.IsSucess)
             {
@@ -34,12 +33,11 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("/extras")]
-        public async Task<IActionResult> GetExtras()
+        [HttpGet("extras")]       
+        public async Task<IActionResult> GetExtrasAsync(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.GetAllExtrasAsync();
+            var request = await _application.GetAllExtrasAsync(cancellationToken);
 
             if (request.IsSucess)
             {
@@ -51,12 +49,11 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("/sandwiches")]
-        public async Task<IActionResult> GetSandwiches()
+        [HttpGet("sandwiches")]
+        public async Task<IActionResult> GetSandwiches(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.GetAllSandwichesAsync();
+            var request = await _application.GetAllSandwichesAsync(cancellationToken);
 
             if (request.IsSucess)
             {

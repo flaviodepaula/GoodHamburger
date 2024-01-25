@@ -1,13 +1,13 @@
 ﻿using Application.Interfaces;
-using Application.Models;
 using AutoMapper;
 using Domain.Models.Order;
+using Infra.Repository.Entities;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("orders")]
     [ApiController]
     public class OrderController : Controller
     {
@@ -24,12 +24,11 @@ namespace WebApi.Controllers
             _mapper = mapper;
         }
 
-        [HttpGet]
-        [Route("/ammount")]
-        public async Task<IActionResult> GetOrderAmount([FromBody] Guid orderGuid)
+        [HttpGet("amount")]
+        public async Task<IActionResult> GetOrderAmount([FromQuery] Guid orderGuid, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.GetOrderAmountAsync(orderGuid);
+            var request = await _application.GetOrderAmountAsync(orderGuid, cancellationToken);
 
             if (request.IsSucess)
             {
@@ -42,14 +41,13 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpPost]
-        [Route("/order")]
-        public async Task<IActionResult> CreateOrderAsync([FromBody] RequestProductViewModel orderProducts)
+        [HttpPost("order")]        
+        public async Task<IActionResult> CreateOrderAsync([FromBody] RequestProductViewModel orderProducts, CancellationToken cancellationToken)
         {
+            if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
+
             var orderDTO = _mapper.Map<OrderDTO>(orderProducts);
-
-            if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.CreateOrderAsync(orderDTO);
+            var request = await _application.CreateOrderAsync(orderDTO, cancellationToken);
 
             if (request.IsSucess)
             {
@@ -62,12 +60,11 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("/allorders")]
-        public async Task<IActionResult> GetAllOrdersAsync([FromBody] Guid orderGuid)
+        [HttpGet("allorders")]
+        public async Task<IActionResult> GetAllOrdersAsync(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.GetAllOrdersAsync();
+            var request = await _application.GetAllOrdersAsync(cancellationToken);
 
             if (request.IsSucess)
             {
@@ -80,12 +77,14 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpPut]
-        [Route("/order")]
-        public async Task<IActionResult> UpdateOrder([FromBody] Order order)
+        [HttpPut("order")]
+        public async Task<IActionResult> UpdateOrderAsync([FromBody] UpdateProductViewModel order, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.UpdateOrdersync(order);
+
+            var orderDto = _mapper.Map<OrderDTO>(order);
+
+            var request = await _application.UpdateOrdersync(orderDto, cancellationToken);
 
             if (request.IsSucess)
             {
@@ -98,12 +97,11 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpDelete]
-        [Route("/order")]
-        public async Task<IActionResult> DeleteOrderAsync([FromBody] Guid orderGuid)
+        [HttpDelete("order")]
+        public async Task<IActionResult> DeleteOrderAsync([FromQuery] Guid orderGuid, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.DeleteOrderAsync(orderGuid);
+            var request = await _application.DeleteOrderAsync(orderGuid, cancellationToken);
 
             if (request.IsSucess)
             {

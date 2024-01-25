@@ -1,19 +1,14 @@
 ﻿using Domain.Models.Order;
 using Infra.Common.Result;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Infra.Repository.Interfaces
 {
     public interface IOrderRepository
     {
-        Task<Result<Order>> GetByIdAsync(Guid orderNumber);
-        Task<Result<IEnumerable<Order>>> GetAllAsync();
-        Task<Result<Order>> CreateAync(Order order);
-        Task<Result<Order>> UpdateAsync(Order order);
-        Task<Result<bool>> DeleteAsync(Guid orderNumber);
+        Task<Result<OrderDTO>> GetByIdAsync(Guid orderNumber, CancellationToken cancellationToken);
+        Task<Result<IEnumerable<OrderDTO>>> GetAllAsync(CancellationToken cancellationToken);
+        Task<Result<Order>> CreateAync(Order order, CancellationToken cancellationToken);
+        Task<Result<Order>> UpdateAsync(Order order, CancellationToken cancellationToken);
+        Task<Result<bool>> DeleteAsync(Guid orderNumber, CancellationToken cancellationToken);
     }
 }

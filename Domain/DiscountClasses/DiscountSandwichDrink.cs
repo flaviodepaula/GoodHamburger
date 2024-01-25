@@ -9,8 +9,8 @@ namespace Domain.DiscountClasses
         {
             decimal discount = 0;
 
-            if (order.Products.Any(x => x.Caterogy == enumProductCategory.Sandwich) &&               
-                order.Products.Any(x => x.Caterogy == enumProductCategory.Drink))
+            if (order.Products.Any(x => x.Category == enumProductCategory.Sandwich) &&               
+                order.Products.Any(x => x.Category == enumProductCategory.SoftDrink))
             {
                 var amount = order.Products.Sum(x => x.Value);
 

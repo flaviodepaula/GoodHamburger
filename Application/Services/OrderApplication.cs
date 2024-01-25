@@ -1,10 +1,8 @@
-﻿using Application.Interfaces;
-using Application.Models;
+﻿using Application.Errors;
+using Application.Interfaces;
 using AutoMapper;
-using Domain.Errors;
 using Domain.Interfaces;
 using Domain.Models.Order;
-using Domain.Models.Products;
 using Infra.Common.Result;
 using Infra.Repository.Interfaces;
 
@@ -14,45 +12,47 @@ namespace Application.Services
     {
         private readonly IOrderRepository _orderRepository;
         private readonly IProductValidator _productValidator;
-        private readonly IMapper _mapper;
+        private readonly IProductRepository _productRepository;
 
-
-        public OrderApplication(IOrderRepository repository, IProductValidator productValidator, IMapper mapper)
+        public OrderApplication(IOrderRepository repository, IProductValidator productValidator, IProductRepository productRepository)
         {
             _orderRepository = repository;
             _productValidator = productValidator;
-            _mapper = mapper;
+            _productRepository = productRepository;
         }
 
-        public async Task<Result<IEnumerable<Order>>> GetAllOrdersAsync()
+        public async Task<Result<IEnumerable<OrderDTO>>> GetAllOrdersAsync(CancellationToken cancellationToken)
         {
-            var dbOrders = await _orderRepository.GetAllAsync();
+            var dbOrders = await _orderRepository.GetAllAsync(cancellationToken);
 
             if (dbOrders.IsFailure)
-                return Result.Failure<IEnumerable<Order>>(DomainErrors.RequestToDatabaseFailed);
+                return Result.Failure<IEnumerable<OrderDTO>>(dbOrders.Error);
 
             return dbOrders.Value.ToList();
         }
 
-        public async Task<Result<Order>> UpdateOrdersync(Order order)
+        public async Task<Result<Order>> UpdateOrdersync(OrderDTO order, CancellationToken cancellationToken)
         {
-            var products = await _productValidator.IsValid(order.Products);
+            var products = await _productRepository.GetProductDetailsListAsync(order.Products, cancellationToken);
 
             if (products.IsFailure)
                 return Result.Failure<Order>(products.Error);
 
-            order.CalculateAmount();
+            var updateOrder = Order.CreateOrder(order.Id, products.Value);
+            if (updateOrder.IsFailure)
+                return Result.Failure<Order>(updateOrder.Error);
+             
 
-            var updatedOrder = await _orderRepository.UpdateAsync(order);
+            var updatedOrder = await _orderRepository.UpdateAsync(updateOrder.Value, cancellationToken);
             if (updatedOrder.IsFailure)
                 return Result.Failure<Order>(updatedOrder.Error);
              
             return updatedOrder;
         }
 
-        public async Task<Result<bool>> DeleteOrderAsync(Guid orderNumber)
+        public async Task<Result<bool>> DeleteOrderAsync(Guid orderNumber, CancellationToken cancellationToken )
         {
-            var isDeleted = await _orderRepository.DeleteAsync(orderNumber);
+            var isDeleted = await _orderRepository.DeleteAsync(orderNumber, cancellationToken);
 
             if (isDeleted.IsFailure)
                 return Result.Failure<bool>(isDeleted.Error);
@@ -60,31 +60,34 @@ namespace Application.Services
             return isDeleted.Value;
         }
 
-        public async Task<Result<Order>> CreateOrderAsync(OrderDTO order)
-        {
-            var productsDTO = _mapper.Map<IEnumerable<Product>>(order.Products);
-            var products = await _productValidator.IsValid(productsDTO);
+        public async Task<Result<Order>> CreateOrderAsync(OrderDTO order, CancellationToken cancellationToken)
+        {           
+            var products = await _productRepository.GetProductDetailsListAsync(order.Products, cancellationToken);
 
             if (products.IsFailure)
                 return Result.Failure<Order>(products.Error);
+            
+            //all products received must be on database
+            if (order.Products.Count() != products.Value.Count())
+                return Result.Failure<Order>(ApplicationErrors.InvalidList);
 
-            var newOrder = await Order.CreateOrder(productsDTO);
+            var newOrder = Order.CreateOrder(Guid.NewGuid(), products.Value);
             if (newOrder.IsFailure)
                 return Result.Failure<Order>(newOrder.Error);
 
-            var newOrderDatabase = await _orderRepository.CreateAync(newOrder.Value);
+            var newOrderDatabase = await _orderRepository.CreateAync(newOrder.Value, cancellationToken);
             if (newOrderDatabase.IsFailure)
                 return Result.Failure<Order>(newOrderDatabase.Error);
 
-            return newOrder.Value;
+            return newOrderDatabase.Value;
         }
 
-        public async Task<Result<decimal>> GetOrderAmountAsync(Guid orderNumber)
+        public async Task<Result<decimal>> GetOrderAmountAsync(Guid orderNumber, CancellationToken cancellationToken)
         {
-            var dbOrders = await _orderRepository.GetByIdAsync(orderNumber);
+            var dbOrders = await _orderRepository.GetByIdAsync(orderNumber , cancellationToken);
 
             if (dbOrders.IsFailure)
-                return Result.Failure<decimal>(DomainErrors.RequestToDatabaseFailed);
+                return Result.Failure<decimal>(dbOrders.Error);
 
             return dbOrders.Value.Amount;
         }

@@ -2,11 +2,19 @@
 
 namespace Infra.Repository.Entities
 {
-    public record Products
+    public class Products
     {
-        public Guid? Id { get; set; }
-        public string? Description { get; set; }
-        public decimal? Value { get; set; }
+        [Key]
+        public Guid ProductId { get; set; }
+        public string Description { get; set; }
+        public decimal Value { get; set; }
         public string Category { get; set; }
+        public string CategoryType { get; set; }
+        public IEnumerable<OrdersProducts> OrdersProducts { get; set; }
+
+        public Products()
+        {
+            
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Domain.DiscountClasses;
 using Domain.Errors;
-using Domain.Interfaces;
 using Domain.Models.Products;
 using Infra.Common.Result;
 
@@ -8,9 +7,7 @@ namespace Domain.Models.Order
 {
     public sealed class Order
     {
-        private readonly IProductValidator _productValidator;
         private decimal _amount;
-
         public Guid Id { get; }
         public IEnumerable<Product> Products { get; private set; }
         public decimal Amount
@@ -18,40 +15,31 @@ namespace Domain.Models.Order
             get { return _amount; }
         }
 
-        private Order(IEnumerable<Product> products)
+        private Order(Guid id, IEnumerable<Product> products)
         {
-            Id = Guid.NewGuid();
+            Id = id;
             Products = products;
         }
-
-        public Order(IProductValidator productValidator)
-        {
-            _productValidator = productValidator;
-        }
-
-        public static async Task<Result<Order>> CreateOrder(IEnumerable<Product> products)
+         
+        public static Result<Order> CreateOrder(Guid id, IEnumerable<Product> products)
         {
             if (products == null || !products.Any())
                 return Result.Failure<Order>(DomainErrors.OrderWithoutProducts);
 
             var groupByCategory = from product in products
-                                  group product by product.Caterogy into categoryGroup
+                                  group product by product.Category into categoryGroup
                                   select categoryGroup;
 
             var hasDuplicated = groupByCategory.All(x => x.Count() > 1);
             if (hasDuplicated)
                 return Result.Failure<Order>(DomainErrors.DuplicatedItems);
 
-            var newOrder = new Order(products);
-            var isValid = await newOrder._productValidator.IsValid(products);
-            if (isValid.IsFailure)            
-                return Result.Failure<Order>(DomainErrors.DuplicatedItems);
-            
+            var newOrder = new Order(id, products);            
             newOrder.CalculateAmount();
 
-            return new Order(products);
+            return newOrder;
         }    
-    
+
         public void CalculateAmount() 
         {
             decimal totalAmount = Products.Sum(x => x.Value);
@@ -66,6 +54,6 @@ namespace Domain.Models.Order
             decimal totalDiscount = discount3Items.GetDiscount(this);
 
             _amount = totalAmount - totalDiscount;
-        }
+        }        
     }
 }
