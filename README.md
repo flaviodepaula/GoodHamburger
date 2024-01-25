@@ -1,16 +1,16 @@
 ## Projeto GoodHambuger
  
-## DescriÁ„o
+## Descri√ß√£o
  
 >Projeto desenvolvido para testes solicitado em entrevista
  
-## ExecuÁ„o local
+## Execu√ß√£o local
  
->Para a execuÁ„o local, siga as intruÁıes abaixo:
+>Para a execu√ß√£o local, siga as intru√ß√µes abaixo:
  
 ```console
  
-# Clone o repositÛrio
+# Clone o reposit√≥rio
  
 $ git clone <repo>
  
@@ -22,19 +22,19 @@ $ cd <pasta-exemplo>
  
 $ docker run -d --name goodhamburger-sqldb-local -p 1433:1433 -e "MSSQL_SA_PASSWORD=senha@123" -e "ACCEPT_EULA=Y" mcr.microsoft.com/mssql/server:2022-latest
   
-# Execute as migrations
- 
-$ dotnet ef database update -s ./WebApi/WebApi.WebApi -p ./Infra.Repository/Infra.Repository./ -v
+# Execute as migrations - My database is hosted on Docker/WSL(Ubuntu)
+
+$ dotnet ef database update -s .\WebApi\WebApi.csproj  -p .\Infra.Repository\ -v
  
 # Execute a api em dotnet
  
-$ dotnet run --project WebApi/WebApi.WebApi.csproj
+$  dotnet run --project .\WebApi\WebApi.csproj
  
-# A aplicaÁ„o ser· executada na porta 5000
+# A aplica√ß√£o ser√° executada na porta 5000
  
 acesse  <http://localhost:5000>
  
-# Acesse a documentaÁ„o swagger
+# Acesse a documenta√ß√£o swagger
  
 acesse  <http://localhost:5000/swagger/index.html>
  
