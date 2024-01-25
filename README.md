@@ -38,10 +38,6 @@ acesse  <http://localhost:5000>
  
 acesse  <http://localhost:5000/swagger/index.html>
  
- 
-# Execute testes automatizados - TODO
- 
-$ dotnet test
   
 # SQL para buscar itens no banco de dados
  SELECT ord.[OrderId], [TotalAmount], prd.Description, prd.Value
