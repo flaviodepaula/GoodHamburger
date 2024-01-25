@@ -1,20 +1,14 @@
-﻿using Application.Models;
-using Domain.Models.Order;
+﻿using Domain.Models.Order;
 using Infra.Common.Result;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Application.Interfaces
 {
     public interface IOrderApplication
     {
-        Task<Result<decimal>> GetOrderAmountAsync(Guid orderNumber);
-        Task<Result<Order>> CreateOrderAsync(OrderDTO order);
-        Task<Result<IEnumerable<Order>>> GetAllOrdersAsync();
-        Task<Result<Order>> UpdateOrdersync(Order order);
-        Task<Result<bool>> DeleteOrderAsync(Guid orderNumber);
+        Task<Result<decimal>> GetOrderAmountAsync(Guid orderNumber, CancellationToken cancellationToken);
+        Task<Result<Order>> CreateOrderAsync(OrderDTO order, CancellationToken cancellationToken);
+        Task<Result<IEnumerable<OrderDTO>>> GetAllOrdersAsync(CancellationToken cancellationToken);
+        Task<Result<Order>> UpdateOrdersync(Order order, CancellationToken cancellationToken);
+        Task<Result<bool>> DeleteOrderAsync(Guid orderNumber, CancellationToken cancellationToken);
     }
 }

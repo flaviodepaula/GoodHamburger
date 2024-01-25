@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces;
-using Application.Models;
 using AutoMapper;
 using Domain.Errors;
 using Domain.Interfaces;
@@ -7,6 +6,7 @@ using Domain.Models.Order;
 using Domain.Models.Products;
 using Infra.Common.Result;
 using Infra.Repository.Interfaces;
+using System.Threading;
 
 namespace Application.Services
 {
@@ -24,35 +24,35 @@ namespace Application.Services
             _mapper = mapper;
         }
 
-        public async Task<Result<IEnumerable<Order>>> GetAllOrdersAsync()
+        public async Task<Result<IEnumerable<OrderDTO>>> GetAllOrdersAsync(CancellationToken cancellationToken)
         {
-            var dbOrders = await _orderRepository.GetAllAsync();
+            var dbOrders = await _orderRepository.GetAllAsync(cancellationToken);
 
             if (dbOrders.IsFailure)
-                return Result.Failure<IEnumerable<Order>>(DomainErrors.RequestToDatabaseFailed);
+                return Result.Failure<IEnumerable<OrderDTO>>(DomainErrors.RequestToDatabaseFailed);
 
             return dbOrders.Value.ToList();
         }
 
-        public async Task<Result<Order>> UpdateOrdersync(Order order)
+        public async Task<Result<Order>> UpdateOrdersync(Order order, CancellationToken cancellationToken)
         {
-            var products = await _productValidator.IsValid(order.Products);
+            var products = await _productValidator.IsValidAsync(order.Products, cancellationToken);
 
             if (products.IsFailure)
                 return Result.Failure<Order>(products.Error);
 
             order.CalculateAmount();
 
-            var updatedOrder = await _orderRepository.UpdateAsync(order);
+            var updatedOrder = await _orderRepository.UpdateAsync(order, cancellationToken);
             if (updatedOrder.IsFailure)
                 return Result.Failure<Order>(updatedOrder.Error);
              
             return updatedOrder;
         }
 
-        public async Task<Result<bool>> DeleteOrderAsync(Guid orderNumber)
+        public async Task<Result<bool>> DeleteOrderAsync(Guid orderNumber, CancellationToken cancellationToken )
         {
-            var isDeleted = await _orderRepository.DeleteAsync(orderNumber);
+            var isDeleted = await _orderRepository.DeleteAsync(orderNumber, cancellationToken);
 
             if (isDeleted.IsFailure)
                 return Result.Failure<bool>(isDeleted.Error);
@@ -60,28 +60,28 @@ namespace Application.Services
             return isDeleted.Value;
         }
 
-        public async Task<Result<Order>> CreateOrderAsync(OrderDTO order)
+        public async Task<Result<Order>> CreateOrderAsync(OrderDTO order, CancellationToken cancellationToken)
         {
             var productsDTO = _mapper.Map<IEnumerable<Product>>(order.Products);
-            var products = await _productValidator.IsValid(productsDTO);
+            var products = await _productValidator.IsValidAsync(productsDTO, cancellationToken);
 
             if (products.IsFailure)
                 return Result.Failure<Order>(products.Error);
 
-            var newOrder = await Order.CreateOrder(productsDTO);
+            var newOrder = await Order.CreateOrderAsync(productsDTO, cancellationToken);
             if (newOrder.IsFailure)
                 return Result.Failure<Order>(newOrder.Error);
 
-            var newOrderDatabase = await _orderRepository.CreateAync(newOrder.Value);
+            var newOrderDatabase = await _orderRepository.CreateAync(newOrder.Value, cancellationToken);
             if (newOrderDatabase.IsFailure)
                 return Result.Failure<Order>(newOrderDatabase.Error);
 
-            return newOrder.Value;
+            return newOrderDatabase.Value;
         }
 
-        public async Task<Result<decimal>> GetOrderAmountAsync(Guid orderNumber)
+        public async Task<Result<decimal>> GetOrderAmountAsync(Guid orderNumber, CancellationToken cancellationToken)
         {
-            var dbOrders = await _orderRepository.GetByIdAsync(orderNumber);
+            var dbOrders = await _orderRepository.GetByIdAsync(orderNumber , cancellationToken);
 
             if (dbOrders.IsFailure)
                 return Result.Failure<decimal>(DomainErrors.RequestToDatabaseFailed);

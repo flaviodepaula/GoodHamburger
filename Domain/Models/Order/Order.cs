@@ -29,7 +29,7 @@ namespace Domain.Models.Order
             _productValidator = productValidator;
         }
 
-        public static async Task<Result<Order>> CreateOrder(IEnumerable<Product> products)
+        public static async Task<Result<Order>> CreateOrderAsync(IEnumerable<Product> products, CancellationToken cancellationToken)
         {
             if (products == null || !products.Any())
                 return Result.Failure<Order>(DomainErrors.OrderWithoutProducts);
@@ -43,7 +43,7 @@ namespace Domain.Models.Order
                 return Result.Failure<Order>(DomainErrors.DuplicatedItems);
 
             var newOrder = new Order(products);
-            var isValid = await newOrder._productValidator.IsValid(products);
+            var isValid = await newOrder._productValidator.IsValidAsync(products, cancellationToken);
             if (isValid.IsFailure)            
                 return Result.Failure<Order>(DomainErrors.DuplicatedItems);
             

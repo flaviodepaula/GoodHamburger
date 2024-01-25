@@ -1,5 +1,4 @@
 ﻿using Application.Interfaces;
-using Application.Models;
 using AutoMapper;
 using Domain.Models.Order;
 using Microsoft.AspNetCore.Mvc;
@@ -26,10 +25,10 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("/ammount")]
-        public async Task<IActionResult> GetOrderAmount([FromBody] Guid orderGuid)
+        public async Task<IActionResult> GetOrderAmount([FromBody] Guid orderGuid, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.GetOrderAmountAsync(orderGuid);
+            var request = await _application.GetOrderAmountAsync(orderGuid, cancellationToken);
 
             if (request.IsSucess)
             {
@@ -44,12 +43,12 @@ namespace WebApi.Controllers
 
         [HttpPost]
         [Route("/order")]
-        public async Task<IActionResult> CreateOrderAsync([FromBody] RequestProductViewModel orderProducts)
+        public async Task<IActionResult> CreateOrderAsync([FromBody] RequestProductViewModel orderProducts, CancellationToken cancellationToken)
         {
             var orderDTO = _mapper.Map<OrderDTO>(orderProducts);
 
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.CreateOrderAsync(orderDTO);
+            var request = await _application.CreateOrderAsync(orderDTO, cancellationToken);
 
             if (request.IsSucess)
             {
@@ -64,10 +63,10 @@ namespace WebApi.Controllers
 
         [HttpGet]
         [Route("/allorders")]
-        public async Task<IActionResult> GetAllOrdersAsync([FromBody] Guid orderGuid)
+        public async Task<IActionResult> GetAllOrdersAsync(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.GetAllOrdersAsync();
+            var request = await _application.GetAllOrdersAsync(cancellationToken);
 
             if (request.IsSucess)
             {
@@ -82,10 +81,10 @@ namespace WebApi.Controllers
 
         [HttpPut]
         [Route("/order")]
-        public async Task<IActionResult> UpdateOrder([FromBody] Order order)
+        public async Task<IActionResult> UpdateOrderAsync([FromBody] Order order, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.UpdateOrdersync(order);
+            var request = await _application.UpdateOrdersync(order, cancellationToken);
 
             if (request.IsSucess)
             {
@@ -100,10 +99,10 @@ namespace WebApi.Controllers
 
         [HttpDelete]
         [Route("/order")]
-        public async Task<IActionResult> DeleteOrderAsync([FromBody] Guid orderGuid)
+        public async Task<IActionResult> DeleteOrderAsync([FromBody] Guid orderGuid, CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
-            var request = await _application.DeleteOrderAsync(orderGuid);
+            var request = await _application.DeleteOrderAsync(orderGuid, cancellationToken);
 
             if (request.IsSucess)
             {

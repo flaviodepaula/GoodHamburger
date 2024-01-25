@@ -14,7 +14,7 @@ namespace Application.Services
             _repository = repository;
         }
 
-        public async Task<Result<bool>> IsValid(IEnumerable<Product> products)
+        public async Task<Result<bool>> IsValidAsync(IEnumerable<Product> products, CancellationToken cancellationToken)
         {
             var result = await _repository.GetProductDetailsList(products);
 

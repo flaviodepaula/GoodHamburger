@@ -5,6 +5,6 @@ namespace Domain.Interfaces
 {
     public interface IProductValidator
     {
-        Task<Result<bool>> IsValid(IEnumerable<Product> products);
+        Task<Result<bool>> IsValidAsync(IEnumerable<Product> products, CancellationToken cancellationToken);
     }
 }

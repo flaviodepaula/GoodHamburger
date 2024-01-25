@@ -1,5 +1,4 @@
-﻿using Application.Models;
-using AutoMapper;
+﻿using AutoMapper;
 using Domain.Models.Order;
 using Domain.Models.Products;
 using WebApi.Models;
