@@ -4,10 +4,10 @@ namespace Domain.Models.Products
 {
     public class Product
     {
-        public Product(Guid id, string? name, decimal value, enumProductCategory category, enumProductCategoryType categoryType)
+        public Product(Guid id, string? description, decimal value, enumProductCategory category, enumProductCategoryType categoryType)
         {
             Id = id;
-            Description = name;
+            Description = description;
             Value = value;
             Category = category;
             CategoryType = categoryType;

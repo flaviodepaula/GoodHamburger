@@ -14,11 +14,11 @@ namespace WebApi.Models
 
     public record RequestProduct
     {
-        public string Name { get; set; }
-        public enumProductCategory Category { get; set; }
-        public RequestProduct(string name, enumProductCategory category)
+        public string Description { get; set; }
+        public enumProductCategoryType Category { get; set; }
+        public RequestProduct(string description, enumProductCategoryType category)
         {
-            Name = name;
+            Description = description;
             Category = category;
         }
     }

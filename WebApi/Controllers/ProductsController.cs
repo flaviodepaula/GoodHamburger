@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("products")]
     [ApiController]
     public class ProductsController : ControllerBase
     {
@@ -16,8 +16,7 @@ namespace WebApi.Controllers
             _logger = logger;          
         }
 
-        [HttpGet]
-        [Route("/sandwichesandextras")]
+        [HttpGet("sandwichesandextras")]       
         public async Task<IActionResult> GetSandwichesAndExtrasAsync(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
@@ -34,8 +33,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("/extras")]
+        [HttpGet("extras")]       
         public async Task<IActionResult> GetExtrasAsync(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);
@@ -51,8 +49,7 @@ namespace WebApi.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("/sandwiches")]
+        [HttpGet("sandwiches")]
         public async Task<IActionResult> GetSandwiches(CancellationToken cancellationToken)
         {
             if (!ModelState.IsValid) return UnprocessableEntity(ModelState);

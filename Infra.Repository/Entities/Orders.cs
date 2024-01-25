@@ -8,7 +8,7 @@ namespace Infra.Repository.Entities
         public Guid OrderId { get; set; }
         public decimal TotalAmount { get; set; }
 
-        public IEnumerable<OrdersProducts> ProductsOnOrder { get; set; }
+        public ICollection<OrdersProducts> ProductsOnOrder { get; set; }
 
         public Orders()
         {

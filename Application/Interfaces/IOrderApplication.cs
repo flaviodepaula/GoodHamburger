@@ -8,7 +8,7 @@ namespace Application.Interfaces
         Task<Result<decimal>> GetOrderAmountAsync(Guid orderNumber, CancellationToken cancellationToken);
         Task<Result<Order>> CreateOrderAsync(OrderDTO order, CancellationToken cancellationToken);
         Task<Result<IEnumerable<OrderDTO>>> GetAllOrdersAsync(CancellationToken cancellationToken);
-        Task<Result<Order>> UpdateOrdersync(Order order, CancellationToken cancellationToken);
+        Task<Result<Order>> UpdateOrdersync(OrderDTO order, CancellationToken cancellationToken);
         Task<Result<bool>> DeleteOrderAsync(Guid orderNumber, CancellationToken cancellationToken);
     }
 }

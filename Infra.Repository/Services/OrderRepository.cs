@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Domain.Models.Order;
+using Domain.Models.Products;
 using Infra.Common.Result;
 using Infra.Repository.Context;
 using Infra.Repository.Errors;
@@ -21,21 +22,42 @@ namespace Infra.Repository.Services
 
         public async Task<Result<Order>> CreateAync(Order order, CancellationToken cancellationToken)
         {
-            try
+            using (var transaction = _dbContext.Database.BeginTransaction())
             {
-                var resultMapped = _mapper.Map<Entities.Orders>(order);
+                try
+                {
+                    var resultMapped = new Entities.Orders()
+                    {
+                        OrderId = order.Id,
+                        TotalAmount = order.Amount
+                    };
 
-                await _dbContext.Orders.AddAsync(resultMapped, cancellationToken);
+                    await _dbContext.Orders.AddAsync(resultMapped, cancellationToken);
+                    await _dbContext.SaveChangesAsync(cancellationToken);
 
-                var result = _dbContext.SaveChanges();
-                if (result > 0)                
+                    var idsProducts = order.Products.Select(x => x.Id).ToList();
+
+                    foreach (var idProd in idsProducts)
+                    {
+                        var orderProduct = new Entities.OrdersProducts()
+                        {
+                            OrderId = order.Id,
+                            ProductId = idProd
+                        };
+
+                        _dbContext.OrdersProducts.Add(orderProduct);
+                    }
+                    await _dbContext.SaveChangesAsync(cancellationToken);
+
+                    transaction.Commit();
+
                     return Result.Sucess(order);
-
-                return Result.Failure<Order>(RepositoryErrors.UnableToCreateOrder);
-            }
-            catch (Exception ex)
-            {
-                return Result.Failure<Order>(RepositoryErrors.GeneralException(ex.Message));
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return Result.Failure<Order>(RepositoryErrors.UnableToCreateOrder(ex.Message));
+                }
             }
         }
 
@@ -59,27 +81,39 @@ namespace Infra.Repository.Services
             }
             catch (Exception ex)
             {
-                return Result.Failure<bool>(RepositoryErrors.GeneralException(ex.Message));
+                return Result.Failure<bool>(RepositoryErrors.DeleteGeneralException(ex.Message));
             }
         }
 
-        public async Task<Result<IQueryable<OrderDTO>>> GetAllAsync(CancellationToken cancellationToken)
+        public async Task<Result<IEnumerable<OrderDTO>>> GetAllAsync(CancellationToken cancellationToken)
         {
             try
             {
-                IQueryable<OrderDTO> databaseResult = Enumerable.Empty<OrderDTO>().AsQueryable();
+                List<OrderDTO> orderList = new List<OrderDTO>();
 
                 var orders = await _dbContext.Orders.Include(ordprd => ordprd.ProductsOnOrder).ThenInclude(prd => prd.Product).ToListAsync(cancellationToken);
 
                 if (orders.Count != 0)
                 {
-                    databaseResult = _mapper.Map<IQueryable<OrderDTO>>(orders);
+                    foreach (var order in orders)
+                    {
+                        orderList.Add(new OrderDTO()
+                        {
+                            Id = order.OrderId,
+                            Amount = order.TotalAmount,
+                            Products = order.ProductsOnOrder.Select(p =>
+                                                    new Product(p.ProductId, p.Product.Description,
+                                                                p.Product.Value,
+                                                                Enum.Parse<enumProductCategory>(p.Product.Category),
+                                                                Enum.Parse<enumProductCategoryType>(p.Product.CategoryType)))
+                        });
+                    }
                 }
-                return Result.Sucess(databaseResult);
+                return Result.Sucess(orderList.AsEnumerable());
             }
             catch (Exception ex)
             {
-                return Result.Failure<IQueryable<OrderDTO>>(RepositoryErrors.RequestToDatabaseFailed(ex.Message));
+                return Result.Failure<IEnumerable<OrderDTO>>(RepositoryErrors.RequestToDatabaseFailed(ex.Message));
             }
         }
 
@@ -91,6 +125,10 @@ namespace Infra.Repository.Services
 
                 var resultMapped = _mapper.Map<OrderDTO>(result);
 
+                if(resultMapped == null) {
+                    return Result.Failure<OrderDTO>(RepositoryErrors.OrderDoesNotExists);
+                }
+
                 return Result.Sucess(resultMapped);
             }
             catch (Exception ex)
@@ -101,7 +139,44 @@ namespace Infra.Repository.Services
 
         public async Task<Result<Order>> UpdateAsync(Order order, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            using (var transaction = _dbContext.Database.BeginTransaction())
+            {
+                try
+                {  
+                    var actualOrder = await _dbContext.Orders
+                        .Include(x=> x.ProductsOnOrder)
+                        .FirstOrDefaultAsync(y=> y.OrderId == order.Id, cancellationToken);
+
+                    if(actualOrder == null)                    
+                        return Result.Failure<Order>(RepositoryErrors.OrderDoesNotExists);
+
+                    actualOrder.ProductsOnOrder.Clear();
+
+                    var newProdutcs = order.Products.Select(x => new Entities.OrdersProducts()
+                    {
+                        OrderId = order.Id,
+                        ProductId = x.Id
+                    });
+
+                    foreach(var p in newProdutcs)
+                    {
+                        actualOrder.ProductsOnOrder.Add(p);
+                    }
+
+                    actualOrder.TotalAmount = order.Amount;
+
+                    await _dbContext.SaveChangesAsync(cancellationToken);
+                      
+                    transaction.Commit();
+
+                    return Result.Sucess(order);
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return Result.Failure<Order>(RepositoryErrors.UnableToUpdateOrder(ex.Message));
+                }
+            }
         }
     }
 }

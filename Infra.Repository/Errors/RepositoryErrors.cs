@@ -11,11 +11,18 @@ namespace Infra.Repository.Errors
 
         public static readonly Error UnableToRemove = new("Repository.Errors.UnableToRemove", "Unable to remove Order.");
         
-        public static readonly Error UnableToCreateOrder = new("Repository.Errors.UnableToCreateOrder", "Unable to create Order.");
+        public static readonly Error OrderDoesNotExists = new("Repository.Errors.OrderDoesNotExists", "Order does not Exists.");
 
-        public static Error GeneralException(string errorMessage)
+        public static Error UnableToCreateOrder(string errorMessage) { 
+            return new("Repository.Errors.UnableToCreateOrder", $"Unable to create Order. ErrorMessage: {errorMessage}"); 
+        }
+        public static Error UnableToUpdateOrder(string errorMessage)
         {
-            return new Error("Repository.Errors.GeneralException", $"Error on Delete row. Message: {errorMessage}.");
+            return new("Repository.Errors.UnableToUpdateOrder", $"Unable to update Order. ErrorMessage: {errorMessage}");
+        }
+
+        public static Error DeleteGeneralException(string errorMessage){
+            return new Error("Repository.Errors.DeleteGeneralException", $"Error on Delete row. Message: {errorMessage}.");
         }
     }
 }

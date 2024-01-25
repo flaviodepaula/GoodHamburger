@@ -5,6 +5,7 @@ using Infra.Repository.Context;
 using Infra.Repository.Errors;
 using Infra.Repository.Interfaces;
 using Microsoft.EntityFrameworkCore;
+using System.Net.Sockets;
 
 namespace Infra.Repository.Services
 {
@@ -44,8 +45,10 @@ namespace Infra.Repository.Services
         {
             try
             {
+                var productNames = products.Select(x=> x.Description).ToList();
+
                 IEnumerable<Product> databaseResult = Enumerable.Empty<Product>();
-                var result = await _dbContext.Products.Where(x => products.All(z => z.Id == x.ProductId)).ToListAsync(cancellationToken);
+                var result = await _dbContext.Products.Where(x => productNames.Contains(x.Description)).ToListAsync(cancellationToken);
                 if (result.Count != 0)
                 {
                     databaseResult = _mapper.Map<IEnumerable<Product>>(result);
