@@ -1,9 +1,9 @@
-﻿using Domain.DiscountClasses;
-using Domain.Errors;
-using Domain.Models.Products;
+﻿using Domain.Orders.DiscountClasses;
+using Domain.Support;
 using Infra.Common.Result;
+using Domain.Products.Models;
 
-namespace Domain.Models.Order
+namespace Domain.Orders.Models
 {
     public sealed class Order
     {
@@ -20,7 +20,7 @@ namespace Domain.Models.Order
             Id = id;
             Products = products;
         }
-         
+
         public static Result<Order> CreateOrder(Guid id, IEnumerable<Product> products)
         {
             if (products == null || !products.Any())
@@ -34,13 +34,13 @@ namespace Domain.Models.Order
             if (hasDuplicated)
                 return Result.Failure<Order>(DomainErrors.DuplicatedItems);
 
-            var newOrder = new Order(id, products);            
+            var newOrder = new Order(id, products);
             newOrder.CalculateAmount();
 
             return newOrder;
-        }    
+        }
 
-        public void CalculateAmount() 
+        public void CalculateAmount()
         {
             decimal totalAmount = Products.Sum(x => x.Value);
 
@@ -54,6 +54,6 @@ namespace Domain.Models.Order
             decimal totalDiscount = discount3Items.GetDiscount(this);
 
             _amount = totalAmount - totalDiscount;
-        }        
+        }
     }
 }

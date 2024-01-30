@@ -1,4 +1,4 @@
-﻿using Domain.Models.Products;
+﻿using Domain.Products.Models;
 
 namespace WebApi.Models
 {

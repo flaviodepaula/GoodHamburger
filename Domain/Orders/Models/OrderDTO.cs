@@ -1,6 +1,6 @@
-﻿using Domain.Models.Products;
+﻿using Domain.Products.Models;
 
-namespace Domain.Models.Order
+namespace Domain.Orders.Models
 {
     public record OrderDTO
     {

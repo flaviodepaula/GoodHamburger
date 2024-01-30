@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
-using Domain.Models.Order;
-using Domain.Models.Products;
+using Domain.Orders.Models;
+using Domain.Products.Models;
 using WebApi.Models;
 
 namespace WebApi.Mappings

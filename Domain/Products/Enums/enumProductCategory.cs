@@ -1,4 +1,4 @@
-﻿namespace Domain.Models.Products
+﻿namespace Domain.Products.Enums
 {
     public enum enumProductCategory
     {

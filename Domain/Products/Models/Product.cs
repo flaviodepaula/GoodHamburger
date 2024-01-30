@@ -1,6 +1,6 @@
-﻿using Domain.Models.Products;
+﻿using Domain.Products.Enums;
 
-namespace Domain.Models.Products
+namespace Domain.Products.Models
 {
     public class Product
     {
@@ -14,7 +14,7 @@ namespace Domain.Models.Products
         }
 
         public Product()
-        {                
+        {
         }
         public Guid Id { get; set; }
         public string? Description { get; set; }

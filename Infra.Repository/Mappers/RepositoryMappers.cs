@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
-using Domain.Models.Order;
-using Domain.Models.Products;
+using Domain.Orders.Models;
+using Domain.Products.Enums;
+using Domain.Products.Models;
 using Infra.Repository.Entities;
 
 namespace Infra.Repository.Mappers

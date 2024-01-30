@@ -1,7 +1,7 @@
-﻿using Domain.Models.Order;
-using Domain.Models.Products;
+﻿using Domain.Orders.Models;
+using Domain.Products.Enums;
 
-namespace Domain.DiscountClasses
+namespace Domain.Orders.DiscountClasses
 {
     public class DiscountSandwichFries : DiscountHandler
     {
