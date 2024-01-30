@@ -1,7 +1,7 @@
 ﻿using Domain.Products.Models;
 using Infra.Common.Result;
 
-namespace Application.Interfaces
+namespace Application.Products
 {
     public interface IProductApplication
     {

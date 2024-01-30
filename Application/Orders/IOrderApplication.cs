@@ -1,7 +1,7 @@
 ﻿using Domain.Orders.Models;
 using Infra.Common.Result;
 
-namespace Application.Interfaces
+namespace Application.Orders
 {
     public interface IOrderApplication
     {

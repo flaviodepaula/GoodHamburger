@@ -1,5 +1,5 @@
-﻿using Application.Interfaces;
-using Application.Services;
+﻿using Application.Orders;
+using Application.Products;
 using Domain.Products.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 

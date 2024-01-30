@@ -1,4 +1,4 @@
-﻿using Application.Interfaces;
+﻿using Application.Products;
 using Microsoft.AspNetCore.Mvc;
 
 namespace WebApi.Controllers

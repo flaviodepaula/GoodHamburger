@@ -1,12 +1,11 @@
-﻿using Application.Errors;
-using Application.Interfaces;
+﻿using Application.Support;
 using AutoMapper;
 using Domain.Orders.Models;
 using Domain.Products.Interfaces;
 using Infra.Common.Result;
 using Infra.Repository.Interfaces;
 
-namespace Application.Services
+namespace Application.Orders
 {
     public class OrderApplication : IOrderApplication
     {
@@ -41,16 +40,16 @@ namespace Application.Services
             var updateOrder = Order.CreateOrder(order.Id, products.Value);
             if (updateOrder.IsFailure)
                 return Result.Failure<Order>(updateOrder.Error);
-             
+
 
             var updatedOrder = await _orderRepository.UpdateAsync(updateOrder.Value, cancellationToken);
             if (updatedOrder.IsFailure)
                 return Result.Failure<Order>(updatedOrder.Error);
-             
+
             return updatedOrder;
         }
 
-        public async Task<Result<bool>> DeleteOrderAsync(Guid orderNumber, CancellationToken cancellationToken )
+        public async Task<Result<bool>> DeleteOrderAsync(Guid orderNumber, CancellationToken cancellationToken)
         {
             var isDeleted = await _orderRepository.DeleteAsync(orderNumber, cancellationToken);
 
@@ -61,12 +60,12 @@ namespace Application.Services
         }
 
         public async Task<Result<Order>> CreateOrderAsync(OrderDTO order, CancellationToken cancellationToken)
-        {           
+        {
             var products = await _productRepository.GetProductDetailsListAsync(order.Products, cancellationToken);
 
             if (products.IsFailure)
                 return Result.Failure<Order>(products.Error);
-            
+
             //all products received must be on database
             if (order.Products.Count() != products.Value.Count())
                 return Result.Failure<Order>(ApplicationErrors.InvalidList);
@@ -84,7 +83,7 @@ namespace Application.Services
 
         public async Task<Result<decimal>> GetOrderAmountAsync(Guid orderNumber, CancellationToken cancellationToken)
         {
-            var dbOrders = await _orderRepository.GetByIdAsync(orderNumber , cancellationToken);
+            var dbOrders = await _orderRepository.GetByIdAsync(orderNumber, cancellationToken);
 
             if (dbOrders.IsFailure)
                 return Result.Failure<decimal>(dbOrders.Error);

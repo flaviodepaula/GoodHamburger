@@ -1,10 +1,9 @@
-﻿using Application.Interfaces;
-using Domain.Products.Enums;
+﻿using Domain.Products.Enums;
 using Domain.Products.Models;
 using Infra.Common.Result;
 using Infra.Repository.Interfaces;
 
-namespace Application.Services
+namespace Application.Products
 {
     public class ProductApplication : IProductApplication
     {
@@ -20,7 +19,7 @@ namespace Application.Services
             {
                 enumProductCategoryType.Extras
             };
-            
+
             var result = await _repository.GetAllProductsByTypeAsync(types, cancellationToken);
 
             if (result.IsFailure)

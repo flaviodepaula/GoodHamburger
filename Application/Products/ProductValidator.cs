@@ -3,7 +3,7 @@ using Domain.Products.Models;
 using Infra.Common.Result;
 using Infra.Repository.Interfaces;
 
-namespace Application.Services
+namespace Application.Products
 {
     public class ProductValidator : IProductValidator
     {
