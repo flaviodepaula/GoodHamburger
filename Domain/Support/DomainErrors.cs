@@ -1,6 +1,6 @@
 ﻿using Infra.Common.Errors;
 
-namespace Domain.Errors
+namespace Domain.Support
 {
     public static class DomainErrors
     {

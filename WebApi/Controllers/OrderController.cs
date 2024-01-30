@@ -1,7 +1,6 @@
 ﻿using Application.Interfaces;
 using AutoMapper;
-using Domain.Models.Order;
-using Infra.Repository.Entities;
+using Domain.Orders.Models;
 using Microsoft.AspNetCore.Mvc;
 using WebApi.Models;
 

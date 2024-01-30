@@ -1,5 +1,5 @@
-﻿using Domain.Interfaces;
-using Domain.Models.Products;
+﻿using Domain.Products.Interfaces;
+using Domain.Products.Models;
 using Infra.Common.Result;
 using Infra.Repository.Interfaces;
 

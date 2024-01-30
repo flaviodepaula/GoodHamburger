@@ -1,8 +1,8 @@
 ﻿using Application.Errors;
 using Application.Interfaces;
 using AutoMapper;
-using Domain.Interfaces;
-using Domain.Models.Order;
+using Domain.Orders.Models;
+using Domain.Products.Interfaces;
 using Infra.Common.Result;
 using Infra.Repository.Interfaces;
 

@@ -1,6 +1,6 @@
 ﻿using Application.Interfaces;
 using Application.Services;
-using Domain.Interfaces;
+using Domain.Products.Interfaces;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Support

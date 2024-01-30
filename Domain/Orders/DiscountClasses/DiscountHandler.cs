@@ -1,6 +1,6 @@
-﻿using Domain.Models.Order;
+﻿using Domain.Orders.Models;
 
-namespace Domain.DiscountClasses
+namespace Domain.Orders.DiscountClasses
 {
     public abstract class DiscountHandler
     {

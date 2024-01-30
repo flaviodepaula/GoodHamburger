@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
-using Domain.Models.Products;
+using Domain.Products.Enums;
+using Domain.Products.Models;
 using Infra.Common.Result;
 using Infra.Repository.Context;
 using Infra.Repository.Errors;

@@ -1,4 +1,4 @@
-﻿using Domain.Models.Products;
+﻿using Domain.Products.Models;
 using Infra.Common.Result;
 
 namespace Application.Interfaces

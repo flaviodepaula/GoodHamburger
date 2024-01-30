@@ -1,4 +1,5 @@
-﻿using Domain.Models.Products;
+﻿using Domain.Products.Enums;
+using Domain.Products.Models;
 using Infra.Common.Result;
 
 namespace Infra.Repository.Interfaces
