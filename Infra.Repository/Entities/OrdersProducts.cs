@@ -14,6 +14,5 @@ namespace Infra.Repository.Entities
         public Guid ProductId { get; set; }
         public Products Product { get; set; }
 
-
     }
 }
