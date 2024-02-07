@@ -13,8 +13,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Infra.Repository.Migrations
 {
     [DbContext(typeof(GoodHamburgerDbContext))]
-    [Migration("20240207005621_AddCustomerTable")]
-    partial class AddCustomerTable
+    [Migration("20240207014520_CreateCustomersAndCustomerOrdersTables")]
+    partial class CreateCustomersAndCustomerOrdersTables
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,11 +28,9 @@ namespace Infra.Repository.Migrations
 
             modelBuilder.Entity("Infra.Repository.Entities.Customer", b =>
                 {
-                    b.Property<int>("Id")
+                    b.Property<Guid>("CustomerId")
                         .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                        .HasColumnType("uniqueidentifier");
 
                     b.Property<string>("Name")
                         .IsRequired()
@@ -55,9 +53,24 @@ namespace Infra.Repository.Migrations
                                 .HasColumnType("nvarchar(max)");
                         });
 
-                    b.HasKey("Id");
+                    b.HasKey("CustomerId");
 
                     b.ToTable("Customers");
+                });
+
+            modelBuilder.Entity("Infra.Repository.Entities.CustomerOrders", b =>
+                {
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<Guid>("OrderId")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("CustomerId", "OrderId");
+
+                    b.HasIndex("OrderId");
+
+                    b.ToTable("CustomerOrders");
                 });
 
             modelBuilder.Entity("Infra.Repository.Entities.Orders", b =>
@@ -66,11 +79,16 @@ namespace Infra.Repository.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uniqueidentifier");
 
+                    b.Property<Guid>("CustomerId")
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<decimal>("TotalAmount")
                         .HasPrecision(10, 2)
                         .HasColumnType("decimal");
 
                     b.HasKey("OrderId");
+
+                    b.HasIndex("CustomerId");
 
                     b.ToTable("Orders");
                 });
@@ -120,6 +138,36 @@ namespace Infra.Repository.Migrations
                     b.ToTable("Products");
                 });
 
+            modelBuilder.Entity("Infra.Repository.Entities.CustomerOrders", b =>
+                {
+                    b.HasOne("Infra.Repository.Entities.Customer", "Customer")
+                        .WithMany("Orders")
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Infra.Repository.Entities.Orders", "Orders")
+                        .WithMany()
+                        .HasForeignKey("OrderId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+
+                    b.Navigation("Orders");
+                });
+
+            modelBuilder.Entity("Infra.Repository.Entities.Orders", b =>
+                {
+                    b.HasOne("Infra.Repository.Entities.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CustomerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Customer");
+                });
+
             modelBuilder.Entity("Infra.Repository.Entities.OrdersProducts", b =>
                 {
                     b.HasOne("Infra.Repository.Entities.Orders", "Order")
@@ -137,6 +185,11 @@ namespace Infra.Repository.Migrations
                     b.Navigation("Order");
 
                     b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("Infra.Repository.Entities.Customer", b =>
+                {
+                    b.Navigation("Orders");
                 });
 
             modelBuilder.Entity("Infra.Repository.Entities.Orders", b =>

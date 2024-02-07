@@ -2,8 +2,9 @@
 {
     public sealed class Customer
     {
-        public int Id { get; set; }
+        public Guid CustomerId { get; set; }
         public string Name { get; set; }
         public Address? Address { get; set; }
+        public ICollection<CustomerOrders>? Orders { get; set; }
     }
 }
