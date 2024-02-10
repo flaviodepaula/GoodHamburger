@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Infra.Repository.Entities
+﻿namespace Infra.Repository.Entities
 {
     public class OrdersProducts
     {
@@ -13,7 +7,6 @@ namespace Infra.Repository.Entities
 
         public Guid ProductId { get; set; }
         public Products Product { get; set; }
-
 
     }
 }
