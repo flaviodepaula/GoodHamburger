@@ -22,9 +22,7 @@ namespace Infra.Repository.Context
             modelBuilder.ApplyConfiguration(new ProductMapping());
             modelBuilder.ApplyConfiguration(new OrderProductsMapping());
             modelBuilder.ApplyConfiguration(new CustomerOrdersMapping());
-
-            //complex type in EF8.
-            modelBuilder.Entity<Customer>().ComplexProperty(a => a.Address, a=> a.IsRequired());
+            modelBuilder.ApplyConfiguration(new CustomerMapping());
         }
     }
 }
