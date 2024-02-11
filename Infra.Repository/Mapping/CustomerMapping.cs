@@ -16,13 +16,6 @@ namespace Infra.Repository.Mapping
             
             //complex type in EF8.
             builder.ComplexProperty(a => a.Address, a => a.IsRequired());
-
-            //builder.OwnsOne(x => x.Address).Property(x => x.PostalCode).HasColumnName("PostalCode").HasMaxLength(12).IsRequired(true);
-            //builder.OwnsOne(x => x.Address).Property(x => x.Street).HasColumnName("Street").HasMaxLength(50).IsRequired(true);
-            //builder.OwnsOne(x => x.Address).Property(x => x.ReferenceDetails).HasColumnName("ReferenceDetails").HasMaxLength(100).IsRequired(true);
-            //builder.OwnsOne(x => x.Address).Property(x => x.Number).HasColumnName("Number").HasMaxLength(10).IsRequired(true);
-            //builder.OwnsOne(x => x.Address).Property(x => x.City).HasColumnName("City").HasMaxLength(30).IsRequired(true);
-            //builder.OwnsOne(x => x.Address).Property(x => x.Neighborhood).HasColumnName("Neighborhood").HasMaxLength(40).IsRequired(true);
         }
     }
 }

@@ -24,7 +24,7 @@ namespace Domain.Orders.Models
         public static Result<Order> CreateOrder(Guid id, IEnumerable<Product> products)
         {
             if (products == null || !products.Any())
-                return Result.Failure<Order>(DomainErrors.OrderWithoutProducts);
+                return Result.Failure<Order>(DomainErrors.OrderErrors.OrderWithoutProducts);
 
             var groupByCategory = from product in products
                                   group product by product.Category into categoryGroup
@@ -32,7 +32,7 @@ namespace Domain.Orders.Models
 
             var hasDuplicated = groupByCategory.All(x => x.Count() > 1);
             if (hasDuplicated)
-                return Result.Failure<Order>(DomainErrors.DuplicatedItems);
+                return Result.Failure<Order>(DomainErrors.OrderErrors.DuplicatedItems);
 
             var newOrder = new Order(id, products);
             newOrder.CalculateAmount();

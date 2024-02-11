@@ -1,6 +1,4 @@
-﻿using Microsoft.Identity.Client;
-
-namespace Infra.Repository.Entities
+﻿namespace Infra.Repository.Entities
 {
     public sealed class Customer
     {
