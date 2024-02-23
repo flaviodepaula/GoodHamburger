@@ -11,25 +11,28 @@ namespace Domain.Customers
         private string _email;
         private string _phone;
         private Address _address;
+        private bool _actived;
 
         public Guid CustomerId { get => _id; }
         public string Name { get => _name; }
         public Address? Address { get => _address; }
         public string Email { get => _email; }
         public string Phone { get => _phone; }
+        public bool Actived { get => _actived; }
 
         private Customer()
         {
             _id = Guid.NewGuid();
         }
 
-        public static Result<Customer> NewCustomer(string name, Address address, string email, string phone)
+        public static Result<Customer> NewCustomer(string name, Address address, string email, string phone, bool actived)
         {
             Customer customer = new() { 
                 _name = name,
                 _address = address,
                 _email = email,
-                _phone = phone
+                _phone = phone,
+                _actived = actived
             };
 
             var result = customer.IsValid();
