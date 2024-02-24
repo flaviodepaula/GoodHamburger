@@ -37,7 +37,11 @@ namespace Infra.Repository.Errors
             {
                 return new("Errors.Repository.Customers.UnableToUpdateCustomer", $"Unable to update Customer. ErrorMessage: {errorMessage}");
             }
-            
+
+            public static Error UnableToCreateCustomer(string errorMessage)
+            {
+                return new("Errors.Repository.Customers.UnableToCreateCustomer", $"Unable to create Customer. ErrorMessage: {errorMessage}");
+            }
         }
     }
 }

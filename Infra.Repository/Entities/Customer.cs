@@ -10,9 +10,19 @@
         public bool Active { get; }
         public ICollection<CustomerOrders>? Orders { get; }
 
-        public Customer()
+        public Customer(Guid customerId, string name, string email, string phoneNumber, Address address)
         {
-            
+            CustomerId = customerId;
+            Name = name;
+            Email = email;
+            PhoneNumber = phoneNumber;
+            Address = address;
         }
+
+        public Customer(Guid customerId)
+        {
+            CustomerId = customerId;
+        }
+         
     }
 }

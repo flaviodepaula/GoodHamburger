@@ -1,5 +1,7 @@
-﻿using Domain.Support;
+﻿using Domain.Customers.DTOs;
+using Domain.Support;
 using Infra.Common.Result;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace Domain.Customers
@@ -71,6 +73,27 @@ namespace Domain.Customers
 
             return true;
         }
-         
+        
+        public CustomerDTO ToCustomerDTO()
+        {
+            CustomerDTO dto = new();
+            dto.Name = this.Name;
+            dto.CustomerId = this.CustomerId;            
+            dto.Email = this.Email;
+            dto.Phone = this.Phone;
+
+            AddressDTO addressDTO = new()
+            {
+                Neighborhood = this.Address!.Neighborhood,
+                Number = this.Address!.Number,
+                ReferenceDetails = this.Address!.ReferenceDetails,
+                City = this.Address!.City,
+                PostalCode = this.Address!.PostalCode
+            };
+
+            dto.Address = addressDTO;
+
+            return dto;
+        }
     }
 }

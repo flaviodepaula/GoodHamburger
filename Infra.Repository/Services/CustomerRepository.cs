@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using Domain.Customers.DTOs;
-using Domain.Orders.Models;
 using Infra.Common.Result;
 using Infra.Repository.Context;
 using Infra.Repository.Errors;
@@ -20,9 +19,30 @@ namespace Infra.Repository.Services
             _dbContext = dbContext;
             _mapper = mapper;
         }
-        public Task<Result<CustomerDTO>> CreateAync(Domain.Customers.Customer customer, CancellationToken cancellationToken)
+        public async Task<Result<CustomerDTO>> CreateAync(Domain.Customers.Customer customer, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            using (var transaction = _dbContext.Database.BeginTransaction())
+            {
+                try
+                {
+                    var newCustomer = _mapper.Map<Entities.Customer>(customer);
+                    
+                    await _dbContext.Customers.AddAsync(newCustomer, cancellationToken);
+                    await _dbContext.SaveChangesAsync(cancellationToken);
+                     
+                    transaction.Commit();
+
+                    var newDTO = customer.ToCustomerDTO();
+
+
+                    return Result.Sucess(newDTO);
+                }
+                catch (Exception ex)
+                {
+                    transaction.Rollback();
+                    return Result.Failure<CustomerDTO>(RepositoryErrors.Customer.UnableToCreateCustomer(ex.Message));
+                }
+            }
         }
 
         public async Task<Result<bool>> DeleteAsync(Guid customerId, CancellationToken cancellationToken)
@@ -34,10 +54,7 @@ namespace Infra.Repository.Services
                 if (userHasOrders)
                     return Result.Failure<bool>(RepositoryErrors.Customer.UserHasOrders);
 
-                Entities.Customer customerToDelete = new()
-                {
-                    CustomerId = customerId,
-                };
+                Entities.Customer customerToDelete = new(customerId);
 
                 _dbContext.Customers.Remove(customerToDelete);
 
