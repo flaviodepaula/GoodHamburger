@@ -23,8 +23,9 @@ namespace Domain.Support
 
         public static class CustomerErrors 
         {
-            public static readonly Error InvalidEmail = new("Domain.Customer.InvalidEmail", "Invalid e-mail, please verify it.");
-            public static readonly Error InvalidPhone = new("Domain.Customer.InvalidPhone", "Invalid phone number, please verify it.");
+            public static readonly Error InvalidEmail = new("Domain.CustomerErrors.InvalidEmail", "Invalid e-mail, please verify it.");
+            public static readonly Error InvalidPhone = new("Domain.CustomerErrors.InvalidPhone", "Invalid phone number, please verify it.");
+            public static readonly Error InvalidName = new("Domain.CustomerErrors.InvalidName", "Invalid name, please verify it.");
         }
 
         public static class AddressErrors

@@ -57,7 +57,7 @@ namespace Infra.Repository.Services
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    return Result.Failure<Order>(RepositoryErrors.UnableToCreateOrder(ex.Message));
+                    return Result.Failure<Order>(RepositoryErrors.Orders.UnableToCreateOrder(ex.Message));
                 }
             }
         }
@@ -78,11 +78,11 @@ namespace Infra.Repository.Services
                 if (result > 0)
                     return Result.Sucess(true);
                 else
-                    return Result.Failure<bool>(RepositoryErrors.UnableToRemove);
+                    return Result.Failure<bool>(RepositoryErrors.Orders.UnableToRemove);
             }
             catch (Exception ex)
             {
-                return Result.Failure<bool>(RepositoryErrors.DeleteGeneralException(ex.Message));
+                return Result.Failure<bool>(RepositoryErrors.GenericErrors.DeleteGeneralException(ex.Message));
             }
         }
 
@@ -114,7 +114,7 @@ namespace Infra.Repository.Services
             }
             catch (Exception ex)
             {
-                return Result.Failure<IEnumerable<OrderDTO>>(RepositoryErrors.RequestToDatabaseFailed(ex.Message));
+                return Result.Failure<IEnumerable<OrderDTO>>(RepositoryErrors.GenericErrors.RequestToDatabaseFailed(ex.Message));
             }
         }
 
@@ -127,14 +127,14 @@ namespace Infra.Repository.Services
                 var resultMapped = _mapper.Map<OrderDTO>(result);
 
                 if(resultMapped == null) {
-                    return Result.Failure<OrderDTO>(RepositoryErrors.OrderDoesNotExists);
+                    return Result.Failure<OrderDTO>(RepositoryErrors.Orders.OrderDoesNotExists);
                 }
 
                 return Result.Sucess(resultMapped);
             }
             catch (Exception ex)
             {
-                return Result.Failure<OrderDTO>(RepositoryErrors.RequestToDatabaseFailed(ex.Message));
+                return Result.Failure<OrderDTO>(RepositoryErrors.GenericErrors.RequestToDatabaseFailed(ex.Message));
             }
         }
 
@@ -149,7 +149,7 @@ namespace Infra.Repository.Services
                         .FirstOrDefaultAsync(y=> y.OrderId == order.Id, cancellationToken);
 
                     if(actualOrder == null)                    
-                        return Result.Failure<Order>(RepositoryErrors.OrderDoesNotExists);
+                        return Result.Failure<Order>(RepositoryErrors.Orders.OrderDoesNotExists);
 
                     actualOrder.ProductsOnOrder.Clear();
 
@@ -175,7 +175,7 @@ namespace Infra.Repository.Services
                 catch (Exception ex)
                 {
                     transaction.Rollback();
-                    return Result.Failure<Order>(RepositoryErrors.UnableToUpdateOrder(ex.Message));
+                    return Result.Failure<Order>(RepositoryErrors.Orders.UnableToUpdateOrder(ex.Message));
                 }
             }
         }
