@@ -1,7 +1,6 @@
 ﻿using Domain.Customers.DTOs;
 using Domain.Support;
 using Infra.Common.Result;
-using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace Domain.Customers
@@ -9,45 +8,54 @@ namespace Domain.Customers
     public class Customer
     {
         private readonly Guid _id;
-        private string _name;
-        private string _email;
-        private string _phone;
-        private Address _address;
+        private string? _name;
+        private string? _email;
+        private string? _phone;
+        private Address? _address;
         private bool _actived;
 
         public Guid CustomerId { get => _id; }
-        public string Name { get => _name; }
+        public string? Name { get => _name; }
         public Address? Address { get => _address; }
-        public string Email { get => _email; }
-        public string Phone { get => _phone; }
+        public string? Email { get => _email; }
+        public string? Phone { get => _phone; }
         public bool Actived { get => _actived; }
 
         private Customer()
         {
             _id = Guid.NewGuid();
         }
-
-        public static Result<Customer> NewCustomer(string name, Address address, string email, string phone, bool actived)
+          
+        public static Result<Customer> NewCustomer(CustomerDTO customerDTO)
         {
-            Customer customer = new() { 
-                _name = name,
-                _address = address,
-                _email = email,
-                _phone = phone,
-                _actived = actived
-            };
+            var newAddress = Address.NewAddress(customerDTO.Address);
+            if (newAddress.IsFailure)
+                return Result.Failure<Customer>(newAddress.Error);
 
+            Customer customer = new()
+            {
+                _name = customerDTO.Name,
+                _address = newAddress.Value,
+                _email = customerDTO.Email,
+                _phone = customerDTO.Phone,
+                _actived = true
+            };
+             
             var result = customer.IsValid();
             if (result.IsFailure)
                 return Result.Failure<Customer>(result.Error);
 
             return customer;
         }
-
+         
         private Result<bool> IsValid()
         {
-            if(!IsEmailValid())
+            if(string.IsNullOrEmpty(this.Name))
+                return Result.Failure<bool>(DomainErrors.CustomerErrors.InvalidName);
+            
+            if (!IsEmailValid())
                 return Result.Failure<bool>(DomainErrors.CustomerErrors.InvalidEmail);
+            
             if(!IsPhoneValid())
                 return Result.Failure<bool>(DomainErrors.CustomerErrors.InvalidPhone);
 
