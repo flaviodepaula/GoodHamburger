@@ -67,7 +67,7 @@ namespace Infra.Repository.Services
             }
             catch (Exception ex)
             {
-                return Result.Failure<bool>(RepositoryErrors.DeleteGeneralException(ex.Message));
+                return Result.Failure<bool>(RepositoryErrors.GenericErrors.DeleteGeneralException(ex.Message));
             }
         }
 
@@ -109,7 +109,7 @@ namespace Infra.Repository.Services
             }
             catch (Exception ex)
             {
-                return Result.Failure<IEnumerable<CustomerDTO>>(RepositoryErrors.RequestToDatabaseFailed(ex.Message));
+                return Result.Failure<IEnumerable<CustomerDTO>>(RepositoryErrors.GenericErrors.RequestToDatabaseFailed(ex.Message));
             }
         }
 
@@ -130,7 +130,7 @@ namespace Infra.Repository.Services
             }
             catch (Exception ex)
             {
-                return Result.Failure<CustomerDTO>(RepositoryErrors.RequestToDatabaseFailed(ex.Message));
+                return Result.Failure<CustomerDTO>(RepositoryErrors.GenericErrors.RequestToDatabaseFailed(ex.Message));
             }
         }
       

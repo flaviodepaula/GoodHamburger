@@ -38,7 +38,7 @@ namespace Infra.Repository.Services
             }
             catch (Exception ex)
             {
-                return Result.Failure<IEnumerable<Product>>(RepositoryErrors.RequestToDatabaseFailed(ex.Message));
+                return Result.Failure<IEnumerable<Product>>(RepositoryErrors.GenericErrors.RequestToDatabaseFailed(ex.Message));
             }
         }
 
@@ -58,7 +58,7 @@ namespace Infra.Repository.Services
             }
             catch (Exception ex)
             {
-                return Result.Failure<IEnumerable<Product>>(RepositoryErrors.RequestToDatabaseFailed(ex.Message));
+                return Result.Failure<IEnumerable<Product>>(RepositoryErrors.GenericErrors.RequestToDatabaseFailed(ex.Message));
             }
         }      
     }
